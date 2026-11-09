@@ -1,0 +1,26 @@
+% Arquitetura em 3 camadas — Caso 15 · Reserva de laboratórios
+\begin{tikzpicture}[
+  camada/.style={draw, thick, rounded corners=3pt, text width=12cm, inner sep=7pt, align=left},
+  seta/.style={-{Stealth[length=3mm]}, thick},
+  rot/.style={font=\small, fill=white, inner sep=2pt}
+]
+  \node[camada, fill=blue!6] (ap) {%
+    \textbf{1. Camada de apresentação} \hfill \emph{Celular ou computador do usuário}\\[3pt]
+    Tela de login · Agenda do laboratório · Nova reserva · Minhas reservas\\
+    Mostra as informações e recebe o que o usuário digita ou toca.};
+
+  \node[camada, fill=orange!8, below=1.9cm of ap] (rn) {%
+    \textbf{2. Camada de regras de negócio} \hfill \emph{Servidor}\\[3pt]
+    Login e perfis (professor e coordenação) · Regras RN01 a RN18 ·
+    Bloqueio de choque de horário · Reservas de 1 a 4 horas e até 40 alunos
+    (30 no Lab 202) · Cálculo do horário de término · Avisos por e-mail};
+
+  \node[camada, fill=green!7, below=1.9cm of rn] (bd) {%
+    \textbf{3. Camada de dados} \hfill \emph{Banco de dados}\\[3pt]
+    Usuários · Laboratórios · Reservas};
+
+  \draw[seta] ([xshift=-3cm]ap.south) -- node[rot]{pedido: ``reservar o Lab 101''} ([xshift=-3cm]rn.north);
+  \draw[seta] ([xshift=3cm]rn.north) -- node[rot]{resposta: reserva aceita ou erro} ([xshift=3cm]ap.south);
+  \draw[seta] ([xshift=-3cm]rn.south) -- node[rot]{consulta e gravação} ([xshift=-3cm]bd.north);
+  \draw[seta] ([xshift=3cm]bd.north) -- node[rot]{dados guardados} ([xshift=3cm]rn.south);
+\end{tikzpicture}

@@ -1,0 +1,268 @@
+% =====================================================================
+% EXEMPLO PREENCHIDO (FICTÍCIO) — TCC NO FORMATO SBC
+% Universidade Tiradentes (UNIT) — Curso de Ciência da Computação
+% =====================================================================
+% Este arquivo é uma versão de exemplo do modelo-tcc-sbc.tex, com todo
+% o conteúdo preenchido com dados FICTÍCIOS (título, autor, orientador,
+% resumo, seções e referências inventados) apenas para servir de
+% referência visual de como o TCC preenchido deve ficar. NÃO é um
+% trabalho real e não deve ser citado ou reaproveitado como fonte.
+%
+% A formatação (margens, fonte, coluna única, espaçamento) é idêntica
+% à do modelo-tcc-sbc.tex em branco — veja aquele arquivo para os
+% comentários explicando cada escolha de formatação.
+% =====================================================================
+
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{times}
+\usepackage[a4paper,top=3.5cm,left=3cm,right=3cm,bottom=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage[bf,sf,footnotesize,indent]{caption}
+
+\setlength{\parindent}{1.27cm}
+\setlength{\parskip}{6pt}
+\flushbottom
+
+\titleformat{\section}{\fontsize{13}{15}\bfseries}{\thesection.}{1em}{}
+\titleformat{\subsection}{\fontsize{12}{14}\bfseries}{\thesubsection.}{1em}{}
+\titleformat{\subsubsection}{\fontsize{12}{14}\bfseries\itshape}{\thesubsubsection.}{1em}{}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+\renewcommand{\captionfont}{\sffamily\footnotesize\bfseries}
+\setlength{\captionmargin}{0.8cm}
+\captionsetup{labelsep=period}
+
+\newenvironment{resumo}{%
+  \list{}{\advance\topsep by6pt\relax
+    \leftmargin=0.8cm
+    \labelwidth=0pt
+    \listparindent=0pt
+    \itemindent\listparindent
+    \rightmargin\leftmargin}\item[\hskip\labelsep\bfseries\itshape Resumo.]\itshape}%
+  {\endlist}
+
+\renewenvironment{abstract}{%
+  \list{}{\advance\topsep by6pt\relax
+    \leftmargin=0.8cm
+    \labelwidth=0pt
+    \listparindent=0pt
+    \itemindent\listparindent
+    \rightmargin\leftmargin}\item[\hskip\labelsep\bfseries\itshape Abstract.]\itshape}%
+  {\endlist}
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{center}
+  {\fontsize{16}{20}\selectfont\bfseries Um Sistema de Recomendação de Disciplinas Eletivas Baseado em Aprendizagem de Máquina para Estudantes de Graduação}\\[4pt]
+  {\fontsize{14}{18}\selectfont\bfseries A Machine Learning-Based Elective Course Recommendation System for Undergraduate Students}\\[12pt]
+
+  {\normalsize\bfseries João Pedro Santos Almeida$^{1}$, Marina Costa Andrade$^{1}$, Ricardo Almeida Ferreira$^{2}$}\\[6pt]
+  {\footnotesize\itshape Orientadora: Marina Costa Andrade (UNIT) -- Coorientador: Ricardo Almeida Ferreira (UFS)}\\[4pt]
+
+  {\normalsize
+    $^{1}$Curso de Ciência da Computação — Universidade Tiradentes (UNIT) -- Aracaju/SE\\{}
+    $^{2}$Departamento de Computação — Universidade Federal de Sergipe (UFS) -- São Cristóvão/SE\\{}
+    \footnotesize\texttt{\{joao.almeida,marina.andrade\}@souunit.com.br, ricardo.ferreira@ufs.br}
+  }
+\end{center}
+\vspace{12pt}
+
+\begin{resumo}
+A escolha de disciplinas eletivas é uma etapa recorrente na vida acadêmica
+que costuma ser feita sem apoio sistemático, levando estudantes a optarem
+por disciplinas pouco alinhadas com seus interesses e objetivos de
+carreira. Este trabalho propõe um sistema de recomendação de disciplinas
+eletivas baseado em filtragem colaborativa, utilizando o histórico de
+matrículas e as avaliações de desempenho de estudantes de cursos de
+Ciência da Computação. Foram avaliados três algoritmos de aprendizagem de
+máquina (KNN, SVD e um modelo baseado em fatoração de matrizes) sobre uma
+base de dados simulada com 1.200 registros de matrícula. Os resultados
+indicam que o modelo baseado em fatoração de matrizes obteve o melhor
+desempenho, com precisão de 84,7\% nas recomendações do tipo top-5.
+Conclui-se que sistemas de recomendação simples já trazem ganhos
+relevantes de personalização para o planejamento acadêmico, servindo como
+base para futuras integrações com sistemas de gestão acadêmica.
+\end{resumo}
+\noindent\textbf{Palavras-chave:} aprendizagem de máquina, sistema de recomendação, currículo acadêmico, filtragem colaborativa.
+
+\vspace{6pt}
+
+\begin{abstract}
+Choosing elective courses is a recurring step in academic life that is
+usually made without systematic support, leading students to pick courses
+poorly aligned with their interests and career goals. This work proposes
+an elective course recommendation system based on collaborative
+filtering, using enrollment history and performance data from Computer
+Science students. Three machine learning algorithms were evaluated (KNN,
+SVD, and a matrix-factorization-based model) on a simulated dataset with
+1,200 enrollment records. Results show that the matrix-factorization
+model achieved the best performance, with 84.7\% top-5 recommendation
+precision. We conclude that even simple recommendation systems bring
+relevant personalization gains to academic planning, serving as a basis
+for future integration with academic management systems.
+\end{abstract}
+\noindent\textbf{Keywords:} machine learning, recommender system, academic curriculum, collaborative filtering.
+
+\vspace{18pt}
+
+\section{Introdução}
+
+A cada semestre, estudantes de graduação precisam escolher disciplinas
+eletivas dentro de um conjunto amplo de opções, muitas vezes sem
+informações suficientes sobre o conteúdo, a carga de trabalho ou a
+aderência de cada disciplina aos seus interesses. Na prática, essa
+escolha costuma ser guiada por recomendações informais de colegas ou pela
+grade de horários disponível, e não por um critério que leve em conta o
+histórico acadêmico do próprio estudante.
+
+Este trabalho tem como objetivo geral propor e avaliar um sistema de
+recomendação de disciplinas eletivas para estudantes de cursos de
+Ciência da Computação, com base em técnicas de aprendizagem de máquina
+aplicadas ao histórico acadêmico. Como objetivos específicos, busca-se
+(i) construir uma base de dados simulada representativa do problema,
+(ii) comparar diferentes algoritmos de recomendação e (iii) avaliar a
+qualidade das recomendações geradas.
+
+O restante deste trabalho está organizado da seguinte forma: a Seção 2
+apresenta os trabalhos relacionados; a Seção 3 descreve a metodologia
+adotada; a Seção 4 apresenta o desenvolvimento e os resultados obtidos; e
+a Seção 5 traz as considerações finais.
+
+\section{Trabalhos Relacionados}
+
+Sistemas de recomendação aplicados ao contexto educacional têm sido
+explorados sob diferentes abordagens. \cite{silva2022} propõem um sistema
+baseado em regras para sugerir disciplinas com base em pré-requisitos
+cursados, mas sem considerar o desempenho do estudante. \cite{oliveira2021}
+utilizam filtragem colaborativa para recomendar materiais de estudo
+complementares, obtendo ganhos de engajamento em ambientes virtuais de
+aprendizagem. Já \cite{souza2023} comparam algoritmos de fatoração de
+matrizes aplicados à recomendação de cursos de pós-graduação, reportando
+resultados superiores aos de abordagens baseadas em conteúdo.
+
+Diferentemente desses trabalhos, esta pesquisa foca especificamente em
+disciplinas eletivas de graduação em Computação e compara três técnicas
+distintas sob as mesmas condições experimentais, o que permite uma
+análise mais direta de qual abordagem é mais adequada a esse cenário.
+
+\section{Metodologia}
+
+Foi construída uma base de dados simulada com 1.200 registros de
+matrícula, representando 150 estudantes fictícios e 24 disciplinas
+eletivas do curso de Ciência da Computação. Cada registro associa um
+estudante, uma disciplina cursada e uma nota de avaliação de satisfação
+(escala de 1 a 5), usada como proxy de interesse.
+
+Três algoritmos foram implementados em Python, utilizando a biblioteca
+scikit-surprise: (i) K-Nearest Neighbors (KNN) com similaridade de
+cosseno; (ii) Singular Value Decomposition (SVD); e (iii) um modelo de
+fatoração de matrizes com regularização L2. A base foi dividida em 80\%
+para treino e 20\% para teste, e a avaliação utilizou a métrica de
+precisão top-5, que mede a proporção de disciplinas relevantes entre as
+cinco primeiras recomendações geradas para cada estudante.
+
+\section{Desenvolvimento e Resultados}
+
+Os três algoritmos foram treinados sobre a base descrita na Seção 3 e
+avaliados no conjunto de teste. A Tabela \ref{tab:resultados} apresenta a
+precisão top-5 obtida por cada algoritmo.
+
+\begin{table}[ht]
+  \centering
+  \caption{Precisão top-5 por algoritmo avaliado.}
+  \label{tab:resultados}
+  \begin{tabular}{lc}
+    \hline
+    Algoritmo & Precisão top-5 \\ \hline
+    KNN (similaridade de cosseno) & 71,3\% \\
+    SVD & 79,5\% \\
+    Fatoração de matrizes (L2) & 84,7\% \\ \hline
+  \end{tabular}
+\end{table}
+
+O modelo de fatoração de matrizes apresentou o melhor desempenho entre os
+três, superando o SVD em 5,2 pontos percentuais. Uma hipótese para essa
+diferença é a capacidade do modelo de capturar padrões latentes de
+afinidade entre estudantes com trajetórias acadêmicas parecidas, mesmo
+quando o número de disciplinas em comum entre eles é pequeno --
+característica frequente em bases esparsas como a utilizada neste
+trabalho.
+
+A Figura \ref{fig:arquitetura} ilustra a arquitetura geral do protótipo
+desenvolvido, dividida em três módulos: coleta e pré-processamento dos
+dados de matrícula, treinamento do modelo de recomendação e geração das
+recomendações apresentadas ao estudante.
+
+\begin{figure}[ht]
+  \centering
+  \fbox{\parbox{0.85\linewidth}{\centering\vspace{1.2cm}
+  \small (espaço reservado para a figura da arquitetura do protótipo)
+  \vspace{1.2cm}}}
+  \caption{Arquitetura geral do protótipo de recomendação.}
+  \label{fig:arquitetura}
+\end{figure}
+
+\section{Conclusão}
+
+Este trabalho propôs e avaliou um sistema de recomendação de disciplinas
+eletivas para estudantes de Ciência da Computação, comparando três
+algoritmos de aprendizagem de máquina sobre uma base de dados simulada.
+O modelo de fatoração de matrizes obteve o melhor resultado, com 84,7\%
+de precisão top-5, indicando que técnicas relativamente simples de
+filtragem colaborativa já são capazes de gerar recomendações relevantes
+para o planejamento acadêmico.
+
+Como limitação, destaca-se o uso de dados simulados em vez de dados reais
+de matrícula, o que pode não capturar toda a variabilidade do
+comportamento real dos estudantes. Como trabalhos futuros, sugere-se (i)
+validar o sistema com dados reais e anonimizados de uma instituição de
+ensino, e (ii) integrar o protótipo a um sistema acadêmico em produção
+para avaliação com usuários reais.
+
+\section*{Declaração de Uso de Inteligência Artificial}
+
+Em conformidade com a Portaria CNPq nº 2.664/2026 e o Art. 12º do Manual
+de Normas de TCC da Universidade Tiradentes, os autores declaram que a
+ferramenta de IA generativa ChatGPT (OpenAI, modelo GPT-4) foi utilizada
+exclusivamente nas etapas de \emph{revisão ortográfica e gramatical} do
+texto em português e de \emph{tradução} do Resumo e das palavras-chave
+para o inglês (Abstract e Keywords). Nenhuma ferramenta de IA generativa
+foi utilizada na geração de código-fonte, na análise dos dados
+experimentais, na obtenção dos resultados reportados na Tabela
+\ref{tab:resultados} ou na redação do conteúdo técnico e científico do
+trabalho, cuja autoria e responsabilidade integral permanecem dos
+autores.
+
+\begin{thebibliography}{9}
+
+\bibitem{silva2022}
+Silva, C. R.
+\newblock Recomendação de disciplinas baseada em regras de pré-requisito.
+\newblock \emph{Anais do Workshop de Informática na Educação}, p. 45--54, 2022.
+
+\bibitem{oliveira2021}
+Oliveira, F. A.; Souza, L. M.
+\newblock Filtragem colaborativa para recomendação de materiais de estudo
+em ambientes virtuais de aprendizagem.
+\newblock \emph{Revista Brasileira de Informática na Educação}, v. 29,
+n. 2, p. 112--130, 2021.
+
+\bibitem{souza2023}
+Souza, T. P.; Lima, R. B.; Costa, H. N.
+\newblock Fatoração de matrizes aplicada à recomendação de cursos de
+pós-graduação: um estudo comparativo.
+\newblock \emph{Anais do Simpósio Brasileiro de Sistemas de Informação},
+p. 201--210, 2023.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,313 @@
+% =====================================================================
+% KIT DO TESTE DE USABILIDADE — Artigo (Tema 6) · Caso 15
+% Sistema: Reserva de laboratórios (versão 1.0), usado no CELULAR.
+% Cada parte começa numa página nova para facilitar a impressão.
+% =====================================================================
+
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{times}
+\usepackage[a4paper,top=2.5cm,left=2.5cm,right=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{xltabular}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\renewcommand{\arraystretch}{1.35}
+\setlist{itemsep=1pt,topsep=2pt}
+
+\titleformat{\section}{\fontsize{14}{16}\bfseries}{}{0em}{}
+\titleformat{\subsection}{\fontsize{12}{14}\bfseries}{}{0em}{}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\caixa}{$\square$}
+\newcommand{\linha}[1]{\rule{#1}{0.4pt}}
+\newcommand{\rodape}[1]{\vfill{\footnotesize\textit{#1}}}
+
+\begin{document}
+\pagestyle{plain}
+
+% =====================================================================
+\begin{center}
+  {\small\bfseries ARTIGO · TEMA 6 · TESTE DE USABILIDADE EM APLICATIVOS}\\[4pt]
+  {\fontsize{18}{22}\selectfont\bfseries Kit do teste de usabilidade}\\[6pt]
+  {\large Sistema de reserva de laboratórios (Caso 15, versão 1.0) · no celular}\\[4pt]
+  {\normalsize Responsável: Wilia Francisco da Silva}
+\end{center}
+
+\section*{O que imprimir}
+
+\begin{xltabular}{\linewidth}{|l|Y|c|}
+  \hline
+  \textbf{Parte} & \textbf{Para quem} & \textbf{Cópias} \\ \hline
+  1. Roteiro do condutor (com gabarito) & Você & 1 \\ \hline
+  2. Termo de consentimento & Cada participante assina antes de começar & 5 \\ \hline
+  3. Cartões das tarefas & O participante lê um cartão por vez & 1 jogo \\ \hline
+  4. Ficha de observação & Você preenche durante o teste & 5 \\ \hline
+  5. Questionário SUS & O participante responde no final & 5 \\ \hline
+\end{xltabular}
+
+Depois do teste, as respostas vão para a \textbf{Planilha do teste de
+usabilidade.xlsx}, que calcula a nota SUS, a taxa de sucesso e o tempo
+médio.
+
+\section*{Preparação (antes do primeiro participante)}
+
+\begin{enumerate}[leftmargin=1cm]
+  \item Envie o arquivo \texttt{laboratorio-de-sistemas.html} para o celular
+    que será usado (por WhatsApp, e-mail ou cabo) e abra no navegador. Ele
+    funciona sem internet depois de aberto.
+  \item Na página inicial, toque no \textbf{caso 15} e confira que a tela
+    \emph{Reserva de laboratórios} abre.
+  \item Tenha um \textbf{cronômetro} (o do próprio celular de quem conduz),
+    caneta e as cópias impressas.
+  \item Escolha um lugar calmo. Cada sessão leva cerca de \textbf{20 minutos}.
+  \item \textbf{Antes de cada participante}, toque em \emph{Restaurar dados de
+    exemplo}, no fim da tela, para que todos comecem com os mesmos dados.
+\end{enumerate}
+
+\section*{Participantes}
+
+Cinco colegas de curso, que farão o papel de \textbf{professor} que
+precisa reservar laboratório. Eles devem ser identificados apenas como
+\textbf{P1 a P5} em todos os papéis e na planilha.
+
+% =====================================================================
+\newpage
+\section*{1. Roteiro do condutor}
+
+\subsection*{Antes de começar (cerca de 3 minutos)}
+
+Leia em voz alta, com suas palavras:
+
+\begin{quote}
+``Obrigado por participar. Estou testando um sistema de reserva de
+laboratórios da faculdade, para um artigo da disciplina. \textbf{Quem está
+sendo avaliado é o sistema, não você}: se algo der errado, é um problema
+do sistema, e isso me ajuda muito. Vou te entregar algumas tarefas, uma
+de cada vez. Imagine que você é um professor da faculdade. Enquanto usa
+o sistema, \textbf{pense em voz alta}: diga o que está procurando, o que
+espera que aconteça e o que achou estranho. Eu não posso te ajudar
+durante as tarefas, mas você pode desistir de qualquer uma quando
+quiser. Quando terminar uma tarefa, me avise dizendo `terminei'.''
+\end{quote}
+
+\begin{enumerate}[leftmargin=1cm]
+  \item Peça para o participante ler e assinar o \textbf{termo de consentimento}.
+  \item Anote na ficha o número do participante (P1 a P5) e o modelo do celular.
+  \item Confirme que os dados de exemplo foram restaurados e entregue o celular
+    já na tela do caso 15.
+\end{enumerate}
+
+\subsection*{Durante as tarefas (cerca de 12 minutos)}
+
+\begin{enumerate}[leftmargin=1cm]
+  \item Entregue o cartão da tarefa, deixe o participante ler e \textbf{comece
+    o cronômetro} quando ele tocar na tela.
+  \item \textbf{Não ajude e não aponte para a tela.} Se ele ficar em silêncio,
+    pergunte só: ``O que você está pensando agora?''. Se ele perguntar algo,
+    devolva: ``O que você acha?''.
+  \item \textbf{Pare o cronômetro} quando ele disser ``terminei'' ou desistir,
+    ou quando chegar a \textbf{5 minutos} (nesse caso, a tarefa conta como falha).
+  \item Anote na ficha: o tempo, o resultado, os erros e as falas importantes.
+    Um \emph{erro} é qualquer ação que o afasta do objetivo: tocar no botão
+    errado, preencher um campo errado, receber uma mensagem de erro.
+  \item Se for preciso ajudar para ele conseguir seguir para a próxima tarefa,
+    marque \emph{Sucesso com ajuda}.
+\end{enumerate}
+
+\subsection*{Depois das tarefas (cerca de 5 minutos)}
+
+\begin{enumerate}[leftmargin=1cm]
+  \item Entregue o \textbf{questionário SUS} e peça que responda pensando no
+    sistema que acabou de usar, sem pensar muito em cada item.
+  \item Faça as duas perguntas finais e anote na ficha:
+    ``O que você achou mais fácil?'' e ``O que mais te atrapalhou?''.
+  \item Agradeça. Antes do próximo participante, toque em
+    \emph{Restaurar dados de exemplo}.
+\end{enumerate}
+
+\subsection*{Gabarito das tarefas (só para o condutor)}
+
+\begin{xltabular}{\linewidth}{|c|Y|Y|}
+  \hline
+  \textbf{Tarefa} & \textbf{Conta como sucesso quando} & \textbf{O que observar} \\ \hline
+  1 & Aparece na lista uma reserva do \textbf{Lab 201}, na \textbf{próxima
+    quinta-feira}, \textbf{10:00 às 12:00}, Estrutura de Dados, 30 alunos,
+    em nome da Profa. Ana Souza. & Se entende o campo \emph{Duração em horas}
+    (precisa digitar 2); se as mensagens de erro ajudam a corrigir. \\ \hline
+  2 & O participante informa a primeira reserva do Lab 101: \textbf{Prof.
+    Danilo Rezende}, Algoritmos, no próximo dia útil, \textbf{08:00 às
+    12:00}. & Como procura (rola a lista, usa a busca?); quanto tempo leva
+    para achar. \\ \hline
+  3 & O participante faz uma reserva que \textbf{respeita as regras da tela}
+    (no sábado, a reserva termina até 12:00; 35 alunos não cabem no Lab
+    202) \textbf{ou} explica por que o pedido, como está, não pode ser feito
+    e propõe uma alternativa. & Se lê as regras de negócio; se percebe o
+    limite de sábado; o que o sistema faz quando a regra é desrespeitada. \\ \hline
+  4 & A reserva da tarefa 1 aparece com a situação \textbf{Cancelada}. & Se
+    confunde \emph{Cancelar} com \emph{Excluir}; se sente falta de
+    confirmação. \\ \hline
+  5 & O participante informa \textbf{Lab 101}, a data e \textbf{19:00 às
+    22:00}. & Que palavra digita na busca (professor ou disciplina) e o que
+    faz se a busca não encontrar nada. \\ \hline
+\end{xltabular}
+
+% =====================================================================
+\newpage
+\section*{2. Termo de consentimento livre e esclarecido}
+
+\textbf{Pesquisa:} Teste de usabilidade de um sistema de reserva de
+laboratórios (artigo da disciplina Laboratório de Engenharia de
+Software, Universidade Tiradentes).
+
+\textbf{Responsável:} Wilia Francisco da Silva
+(\texttt{wilia.francisco@souunit.com.br}).
+
+\textbf{Objetivo:} avaliar se o sistema é fácil de usar. Quem está sendo
+avaliado é o sistema, e não o participante.
+
+\textbf{Como funciona:} você vai usar o sistema num celular para
+realizar 5 tarefas curtas, pensando em voz alta, e depois responder a
+um questionário de 10 perguntas. A sessão leva cerca de 20 minutos. O
+responsável vai anotar o tempo, os erros e os comentários.
+
+\textbf{Seus direitos:}
+\begin{itemize}[leftmargin=1cm]
+  \item A participação é voluntária e não tem custo nem pagamento.
+  \item Você pode desistir a qualquer momento, sem precisar explicar o motivo.
+  \item Seu nome \textbf{não} aparecerá no artigo. Você será identificado
+    apenas por um código (P1 a P5).
+  \item Os dados serão usados somente neste trabalho acadêmico.
+  \item Não haverá gravação de áudio, vídeo ou imagem do seu rosto.
+\end{itemize}
+
+Declaro que li as informações acima, que minhas dúvidas foram
+esclarecidas e que concordo em participar.
+
+\vspace{1.2cm}
+
+Código do participante: \linha{2cm} \hfill Data: \linha{1cm}/\linha{1cm}/2026
+
+\vspace{1.4cm}
+
+\linha{8cm}\\
+Assinatura do participante
+
+\vspace{1.2cm}
+
+\linha{8cm}\\
+Wilia Francisco da Silva (responsável)
+
+% =====================================================================
+\newpage
+\section*{3. Cartões das tarefas}
+
+{\small Recorte nas linhas e entregue um cartão por vez, na ordem.}
+
+\newcommand{\cartao}[2]{%
+  \noindent\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{%
+    \vspace{6pt}{\large\bfseries Tarefa #1}\\[6pt]
+    {\large #2}\vspace{8pt}}}\par\vspace{10pt}}
+
+\cartao{1}{Você é a \textbf{Profa. Ana Souza}. Na \textbf{próxima
+quinta-feira}, das \textbf{10h às 12h}, você vai dar aula de
+\textbf{Estrutura de Dados} para \textbf{30 alunos} no \textbf{Lab 201}.
+Faça essa reserva.}
+
+\cartao{2}{Você vai usar o \textbf{Lab 101} e quer saber se ele já está
+ocupado. Descubra qual é a \textbf{primeira reserva} do Lab 101 que
+existe no sistema: em que dia, de que horas a que horas e de qual
+professor.}
+
+\cartao{3}{Você precisa de um laboratório para a disciplina de
+\textbf{Banco de Dados II}, com \textbf{35 alunos}, no \textbf{próximo
+sábado}, das \textbf{10h às 13h}. Faça a reserva.}
+
+\cartao{4}{A aula de Estrutura de Dados da Profa. Ana Souza (tarefa 1)
+foi suspensa. \textbf{Cancele essa reserva}.}
+
+\cartao{5}{A coordenação quer saber em que laboratório e em que horário
+será a aula de \textbf{Banco de Dados} do \textbf{Prof. Sérgio Santana}.
+Encontre essa reserva \textbf{usando a busca}.}
+
+% =====================================================================
+\newpage
+\section*{4. Ficha de observação}
+
+Participante: \textbf{P} \linha{1cm} \qquad Data: \linha{1cm}/\linha{1cm}/2026
+
+Celular (modelo): \linha{6cm}
+
+Já reservou laboratório ou sala por algum sistema? \caixa{} Sim \quad \caixa{} Não
+
+\begin{xltabular}{\linewidth}{|c|c|>{\raggedright\arraybackslash}p{4.3cm}|c|Y|}
+  \hline
+  \textbf{Tarefa} & \textbf{Tempo} & \textbf{Resultado} & \textbf{Erros} & \textbf{Observações e falas} \\ \hline
+  1 & \linha{0.6cm}:\linha{0.6cm} & \caixa{} Sucesso \newline \caixa{} Sucesso com ajuda \newline \caixa{} Falha & & \\[0.3cm] \hline
+  2 & \linha{0.6cm}:\linha{0.6cm} & \caixa{} Sucesso \newline \caixa{} Sucesso com ajuda \newline \caixa{} Falha & & \\[0.3cm] \hline
+  3 & \linha{0.6cm}:\linha{0.6cm} & \caixa{} Sucesso \newline \caixa{} Sucesso com ajuda \newline \caixa{} Falha & & \\[0.3cm] \hline
+  4 & \linha{0.6cm}:\linha{0.6cm} & \caixa{} Sucesso \newline \caixa{} Sucesso com ajuda \newline \caixa{} Falha & & \\[0.3cm] \hline
+  5 & \linha{0.6cm}:\linha{0.6cm} & \caixa{} Sucesso \newline \caixa{} Sucesso com ajuda \newline \caixa{} Falha & & \\[0.3cm] \hline
+\end{xltabular}
+
+{\small Tempo em minutos:segundos. Limite de 5 minutos por tarefa (passou disso, marque Falha).}
+
+\textbf{Problemas observados} (o que atrapalhou o participante)
+
+\begin{xltabular}{\linewidth}{|c|Y|c|}
+  \hline
+  \textbf{Tarefa} & \textbf{O que aconteceu} & \textbf{Impacto} \\ \hline
+  & & \caixa{} Alto \caixa{} Médio \caixa{} Baixo \\[0.2cm] \hline
+  & & \caixa{} Alto \caixa{} Médio \caixa{} Baixo \\[0.2cm] \hline
+  & & \caixa{} Alto \caixa{} Médio \caixa{} Baixo \\[0.2cm] \hline
+\end{xltabular}
+
+{\small Impacto: \textbf{alto} = impediu de concluir; \textbf{médio} =
+atrasou ou exigiu nova tentativa; \textbf{baixo} = só causou dúvida ou
+incômodo.}
+
+\textbf{O que achou mais fácil?}\\[14pt]
+\linha{\linewidth}
+
+\textbf{O que mais atrapalhou?}\\[14pt]
+\linha{\linewidth}
+
+% =====================================================================
+\newpage
+\section*{5. Questionário SUS}
+
+Participante: \textbf{P} \linha{1cm} \qquad Data: \linha{1cm}/\linha{1cm}/2026
+
+Pensando no sistema de reserva de laboratórios que você acabou de usar,
+marque \textbf{um número} em cada frase. Responda rápido, sem pensar
+muito. Se não souber responder uma frase, marque o 3.
+
+\begin{center}
+1 = discordo totalmente \qquad 5 = concordo totalmente
+\end{center}
+
+\begin{xltabular}{\linewidth}{|c|Y|c|c|c|c|c|}
+  \hline
+  \textbf{Nº} & \textbf{Afirmação} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} \\ \hline
+  1 & Eu acho que gostaria de usar este sistema com frequência. & \caixa & \caixa & \caixa & \caixa & \caixa \\ \hline
+  2 & Eu achei o sistema desnecessariamente complexo. & \caixa & \caixa & \caixa & \caixa & \caixa \\ \hline
+  3 & Eu achei o sistema fácil de usar. & \caixa & \caixa & \caixa & \caixa & \caixa \\ \hline
+  4 & Eu acho que precisaria da ajuda de uma pessoa com conhecimentos técnicos para usar este sistema. & \caixa & \caixa & \caixa & \caixa & \caixa \\ \hline
+  5 & Eu achei que as várias funções deste sistema estão bem integradas. & \caixa & \caixa & \caixa & \caixa & \caixa \\ \hline
+  6 & Eu achei que há muita inconsistência neste sistema. & \caixa & \caixa & \caixa & \caixa & \caixa \\ \hline
+  7 & Eu imagino que a maioria das pessoas aprenderia a usar este sistema rapidamente. & \caixa & \caixa & \caixa & \caixa & \caixa \\ \hline
+  8 & Eu achei o sistema muito complicado de usar. & \caixa & \caixa & \caixa & \caixa & \caixa \\ \hline
+  9 & Eu me senti muito confiante usando o sistema. & \caixa & \caixa & \caixa & \caixa & \caixa \\ \hline
+  10 & Eu precisei aprender muitas coisas antes de conseguir usar este sistema. & \caixa & \caixa & \caixa & \caixa & \caixa \\ \hline
+\end{xltabular}
+
+\rodape{Questionário baseado na System Usability Scale (BROOKE, 1996), em tradução livre para o português.}
+
+\end{document}

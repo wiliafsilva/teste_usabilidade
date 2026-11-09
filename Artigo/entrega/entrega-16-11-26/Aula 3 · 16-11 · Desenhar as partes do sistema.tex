@@ -1,0 +1,177 @@
+% =====================================================================
+% PROJETO DE ENGENHARIA DE SOFTWARE — AULA 3 (16/11)
+% Desenhar as partes do sistema
+% Caso 15 · Reserva de laboratórios da faculdade
+% Os desenhos ficam em figuras/ e são incluídos com \input.
+% =====================================================================
+
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{times}
+\usepackage[a4paper,top=3cm,left=3cm,right=3cm,bottom=2.5cm]{geometry}
+\usepackage{xltabular}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{caption}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\renewcommand{\arraystretch}{1.3}
+\setlist{itemsep=0pt,topsep=2pt}
+\captionsetup{font=small,labelfont=bf,labelsep=period}
+
+\titleformat{\section}{\fontsize{13}{15}\bfseries}{\thesection.}{1em}{}
+\titleformat{\subsection}{\fontsize{12}{14}\bfseries}{\thesubsection.}{1em}{}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\begin{document}
+\pagestyle{plain}
+
+\begin{center}
+  {\small\bfseries PROJETO DE ENGENHARIA DE SOFTWARE}\\[4pt]
+  {\fontsize{16}{20}\selectfont\bfseries Aula 3 · 16/11 · Desenhar as partes do sistema}\\[6pt]
+  {\large Caso 15 · Reserva de laboratórios da faculdade}
+\end{center}
+
+\vspace{6pt}
+
+\begin{xltabular}{\linewidth}{|l|Y|}
+  \hline
+  \textbf{Professor} & Sérgio Santana \\ \hline
+  \textbf{Disciplina} & Laboratório de Engenharia de Software \\ \hline
+  \textbf{Integrante} & Wilia Francisco da Silva \\ \hline
+  \textbf{Regra para testar} & Reservas de 1 a 4 horas, para até 40 alunos \\ \hline
+\end{xltabular}
+
+% ---------------------------------------------------------------------
+\section{O sistema em 3 camadas}
+
+O sistema segue o modelo cliente e servidor e é dividido em três
+camadas. O professor usa o celular ou o computador (cliente); as regras
+são verificadas no servidor; as informações ficam guardadas no banco de
+dados. A Figura~\ref{fig:camadas} mostra as camadas e como elas
+conversam.
+
+\begin{center}
+  \input{figuras/camadas}
+  \captionof{figure}{Arquitetura em 3 camadas do sistema de reserva de laboratórios.}
+  \label{fig:camadas}
+\end{center}
+
+\begin{xltabular}{\linewidth}{|l|l|Y|}
+  \hline
+  \textbf{Camada} & \textbf{Onde fica} & \textbf{O que fica nela} \\ \hline
+  Apresentação & Celular ou computador & As telas: login, agenda do laboratório, nova reserva e minhas reservas. Exemplo: o formulário de nova reserva. \\ \hline
+  Regras de negócio & Servidor & As regras RN01 a RN18. Exemplo: verificar se a reserva tem de 1 a 4 horas, se cabe no laboratório e se não choca com outra; calcular o horário de término. \\ \hline
+  Dados & Banco de dados & Usuários, laboratórios e reservas. Exemplo: a reserva confirmada fica gravada aqui. \\ \hline
+\end{xltabular}
+
+\textbf{Exemplo do caminho de uma reserva:}
+\begin{enumerate}[leftmargin=1.2cm]
+  \item O professor preenche a tela \emph{Nova reserva} no celular e toca em \emph{Confirmar reserva}.
+  \item O pedido vai para o servidor, que verifica as regras: duração de 1 a 4 horas, até 40 alunos (30 no Lab 202), horário de funcionamento e choque com outras reservas.
+  \item Se tudo estiver certo, o servidor grava a reserva no banco de dados e envia o aviso por e-mail.
+  \item O servidor responde ao celular, que mostra \emph{Reserva confirmada}. Se alguma regra falhar, a tela mostra o motivo do erro.
+\end{enumerate}
+
+% ---------------------------------------------------------------------
+\section{Esboço das 3 telas principais}
+
+As três telas abaixo são da versão 2.0 e cobrem o que falta na versão
+1.0: a agenda do laboratório, a consulta de disponibilidade antes de
+reservar e a edição das reservas.
+
+\noindent\begin{tabularx}{\linewidth}{|l|c|Y|}
+  \hline
+  \textbf{Tela} & \textbf{Histórias} & \textbf{O que a tela resolve} \\ \hline
+  1 · Agenda do laboratório & H01 & Mostra os horários livres e ocupados de cada laboratório (RF06). \\ \hline
+  2 · Nova reserva & H02, H01 & Reserva pelo celular e mostra se o laboratório está livre antes de confirmar (RF07). A duração é escolhida numa lista de 1 a 4 horas, o que evita erros de digitação. \\ \hline
+  3 · Minhas reservas & H03, H04, H06 & Cancela e edita reservas (RF03, RF08) e mostra o aviso de confirmação (RF10). \\ \hline
+\end{tabularx}
+
+\begin{center}
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \input{figuras/tela1-agenda}
+    \captionof{figure}{Tela 1 · Agenda do laboratório.}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \input{figuras/tela2-nova-reserva}
+    \captionof{figure}{Tela 2 · Nova reserva.}
+  \end{minipage}
+\end{center}
+
+\begin{center}
+  \input{figuras/tela3-minhas-reservas}
+  \captionof{figure}{Tela 3 · Minhas reservas.}
+\end{center}
+
+% ---------------------------------------------------------------------
+\section{Artigo: introdução}
+
+\textbf{Tema 6 · Teste de usabilidade em aplicativos}
+
+Um sistema pode cumprir todas as funções previstas e, ainda assim,
+fracassar quando as pessoas que o usam não entendem o que fazer,
+cometem erros com frequência ou desistem da tarefa. Por isso, além de
+verificar se o software funciona, é preciso verificar se ele é fácil
+de usar. Segundo Barbosa e Silva (2010), a usabilidade está relacionada
+à facilidade de aprendizado e de uso de um sistema e à satisfação de
+quem o utiliza, e deve ser avaliada com métodos próprios ao longo do
+desenvolvimento.
+
+Esse cuidado vale também para sistemas pequenos, criados para resolver
+problemas do dia a dia. É o caso do sistema de reserva de laboratórios
+de uma faculdade: a coordenação recebia os pedidos por e-mail e era
+comum dois professores chegarem ao mesmo laboratório no mesmo horário.
+A versão 1.0 do sistema foi criada para mostrar as reservas e impedir
+esses choques. No entanto, se os professores tiverem dificuldade para
+reservar, a tendência é que voltem a usar o e-mail, e o problema
+original continua.
+
+Avaliar a usabilidade não exige, necessariamente, muitos participantes.
+O modelo proposto por Nielsen e Landauer (1993) mostra que a quantidade
+de problemas encontrados cresce rapidamente com os primeiros usuários
+testados e que um grupo pequeno, por volta de cinco pessoas, já revela
+a maior parte deles. A observação dos participantes pode ser combinada
+com um questionário de satisfação, como a escala SUS
+(BROOKE, 1996), e com a classificação dos problemas pelas heurísticas
+de usabilidade (NIELSEN; MOLICH, 1990).
+
+Diante disso, este artigo busca responder à pergunta: \emph{como testar
+se um aplicativo é fácil de usar?} Para isso, apresenta um estudo de
+caso em que a versão 1.0 do sistema de reserva de laboratórios foi
+testada por cinco colegas de curso. Os objetivos específicos são:
+(i) planejar tarefas que representem o uso real do sistema;
+(ii) medir a taxa de sucesso e o tempo de cada tarefa;
+(iii) aplicar o questionário SUS; e
+(iv) classificar os problemas encontrados e propor melhorias para a
+versão 2.0.
+
+O restante do texto está organizado da seguinte forma: a Seção 2
+apresenta a fundamentação teórica sobre usabilidade e testes com
+usuários; a Seção 3 descreve o desenvolvimento do estudo e analisa os
+resultados; e a Seção 4 traz as considerações finais.
+
+\subsection*{Referências citadas na introdução}
+
+{\small
+BARBOSA, S. D. J.; SILVA, B. S. \emph{Interação humano-computador}. Rio de Janeiro: Elsevier, 2010.
+
+BROOKE, J. SUS: a ``quick and dirty'' usability scale. In: JORDAN, P. W. et al. (Ed.). \emph{Usability Evaluation in Industry}. London: Taylor \& Francis, 1996. p. 189--194.
+
+NIELSEN, J.; LANDAUER, T. K. A mathematical model of the finding of usability problems. In: \emph{Proceedings of the INTERCHI'93 Conference on Human Factors in Computing Systems}. Amsterdam: ACM, 1993. p. 206--213. DOI: 10.1145/169059.169166.
+
+NIELSEN, J.; MOLICH, R. Heuristic evaluation of user interfaces. In: \emph{Proceedings of the SIGCHI Conference on Human Factors in Computing Systems (CHI'90)}. Seattle: ACM, 1990. p. 249--256. DOI: 10.1145/97243.97281.
+}
+
+\end{document}

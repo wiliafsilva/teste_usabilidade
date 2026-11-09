@@ -1,0 +1,337 @@
+% =====================================================================
+% ARTIGO — PROJETO DE ENGENHARIA DE SOFTWARE (Prof. Sérgio Santana)
+% Tema 6 · Teste de usabilidade em aplicativos (estudo de caso)
+% Caso 15 · Reserva de laboratórios da faculdade
+% ---------------------------------------------------------------------
+% Base: templates/modelo-tcc-sbc.tex (modelo SBC fornecido pelo docente).
+% Ajustes exigidos pelo PDF da disciplina (seção 6):
+%   - seções: título, resumo, introdução, fundamentação teórica,
+%     desenvolvimento, considerações e referências;
+%   - Times New Roman 12, espaçamento 1,5;
+%   - de 8 a 10 páginas, mínimo de 5 referências (2 artigos científicos);
+%   - entrega em PDF em 30/11.
+% Citações no formato autor-data (ABNT).
+% Trechos ainda não escritos aparecem marcados com \pendente{...}.
+% =====================================================================
+
+\documentclass[a4paper,12pt]{article}
+
+% ---------------------------------------------------------------------
+% PACOTES (os mesmos do modelo SBC + setspace, xcolor e tabularx)
+% ---------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{times}
+\usepackage[a4paper,top=3.5cm,left=3cm,right=3cm,bottom=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage[bf,sf,footnotesize,indent]{caption}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+% ---------------------------------------------------------------------
+% ESPAÇAMENTO: 1,5 entre linhas (regra da disciplina)
+% ---------------------------------------------------------------------
+\onehalfspacing
+\setlength{\parindent}{1.27cm}
+\setlength{\parskip}{6pt}
+
+% ---------------------------------------------------------------------
+% SEÇÕES E LEGENDAS (iguais ao modelo SBC)
+% ---------------------------------------------------------------------
+\titleformat{\section}{\fontsize{13}{15}\bfseries}{\thesection.}{1em}{}
+\titleformat{\subsection}{\fontsize{12}{14}\bfseries}{\thesubsection.}{1em}{}
+\titleformat{\subsubsection}{\fontsize{12}{14}\bfseries\itshape}{\thesubsubsection.}{1em}{}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+\renewcommand{\captionfont}{\sffamily\footnotesize\bfseries}
+\setlength{\captionmargin}{0.8cm}
+\captionsetup{labelsep=period}
+
+% ---------------------------------------------------------------------
+% RESUMO / ABSTRACT (iguais ao modelo SBC)
+% ---------------------------------------------------------------------
+\newenvironment{resumo}{%
+  \list{}{\advance\topsep by6pt\relax
+    \leftmargin=0.8cm
+    \labelwidth=0pt
+    \listparindent=0pt
+    \itemindent\listparindent
+    \rightmargin\leftmargin}\item[\hskip\labelsep\bfseries\itshape Resumo.]\itshape}%
+  {\endlist}
+
+\renewenvironment{abstract}{%
+  \list{}{\advance\topsep by6pt\relax
+    \leftmargin=0.8cm
+    \labelwidth=0pt
+    \listparindent=0pt
+    \itemindent\listparindent
+    \rightmargin\leftmargin}\item[\hskip\labelsep\bfseries\itshape Abstract.]\itshape}%
+  {\endlist}
+
+% Marca de trecho pendente (remover todas antes da entrega final)
+\newcommand{\pendente}[1]{{\color{gray}\upshape [PENDENTE: #1]}}
+
+% Referências ABNT: sem número, alinhadas à esquerda
+\newenvironment{referencias}{%
+  \section*{Referências}
+  \begin{singlespace}
+  \setlength{\parindent}{0pt}\setlength{\parskip}{10pt}\raggedright}%
+  {\end{singlespace}}
+
+\begin{document}
+\pagestyle{empty}
+
+% =====================================================================
+% TÍTULO, AUTOR, RESUMO E ABSTRACT
+% =====================================================================
+\begin{center}
+  \begin{singlespace}
+  {\fontsize{16}{20}\selectfont\bfseries Teste de Usabilidade com Cinco Usuários: Estudo de Caso de um Sistema de Reserva de Laboratórios}\\[4pt]
+  {\fontsize{14}{18}\selectfont\bfseries Usability Testing with Five Users: A Case Study of a Laboratory Reservation System}\\[12pt]
+
+  {\normalsize\bfseries Wilia Francisco da Silva$^{1}$}\\[6pt]
+  {\footnotesize\itshape Disciplina: Laboratório de Engenharia de Software -- Prof. Sérgio Santana}\\[4pt]
+
+  {\normalsize
+    $^{1}$Curso de Ciência da Computação -- Universidade Tiradentes (UNIT) -- Aracaju/SE\\{}
+    \footnotesize\texttt{wilia.francisco@souunit.com.br}
+  }
+  \end{singlespace}
+\end{center}
+\vspace{12pt}
+
+\begin{resumo}
+\pendente{escrever ao final, em um único parágrafo, com objetivo,
+método, principais resultados e conclusão.}
+\end{resumo}
+\noindent\textbf{Palavras-chave:} usabilidade, teste com usuários, System Usability Scale, avaliação heurística.
+
+\vspace{6pt}
+
+\begin{abstract}
+\pendente{versão em inglês do resumo.}
+\end{abstract}
+\noindent\textbf{Keywords:} usability, user testing, System Usability Scale, heuristic evaluation.
+
+\vspace{18pt}
+
+% =====================================================================
+% 1. INTRODUÇÃO (entregue na Aula 3)
+% =====================================================================
+\section{Introdução}
+
+Um sistema pode cumprir todas as funções previstas e, ainda assim,
+fracassar quando as pessoas que o usam não entendem o que fazer,
+cometem erros com frequência ou desistem da tarefa. Por isso, além de
+verificar se o software funciona, é preciso verificar se ele é fácil
+de usar. Segundo Barbosa e Silva (2010), a usabilidade está relacionada
+à facilidade de aprendizado e de uso de um sistema e à satisfação de
+quem o utiliza, e deve ser avaliada com métodos próprios ao longo do
+desenvolvimento.
+
+Esse cuidado vale também para sistemas pequenos, criados para resolver
+problemas do dia a dia. É o caso do sistema de reserva de laboratórios
+de uma faculdade: a coordenação recebia os pedidos por e-mail e era
+comum dois professores chegarem ao mesmo laboratório no mesmo horário.
+A versão 1.0 do sistema foi criada para mostrar as reservas e impedir
+esses choques. No entanto, se os professores tiverem dificuldade para
+reservar, a tendência é que voltem a usar o e-mail, e o problema
+original continua.
+
+Avaliar a usabilidade não exige, necessariamente, muitos participantes.
+O modelo proposto por Nielsen e Landauer (1993) mostra que a quantidade
+de problemas encontrados cresce rapidamente com os primeiros usuários
+testados e que um grupo pequeno, por volta de cinco pessoas, já revela
+a maior parte deles. A observação dos participantes pode ser combinada
+com um questionário de satisfação, como a escala SUS (BROOKE, 1996), e
+com a classificação dos problemas pelas heurísticas de usabilidade
+(NIELSEN; MOLICH, 1990).
+
+Diante disso, este artigo busca responder à pergunta: \emph{como testar
+se um aplicativo é fácil de usar?} Para isso, apresenta um estudo de
+caso em que a versão 1.0 do sistema de reserva de laboratórios foi
+testada por cinco colegas de curso. Os objetivos específicos são:
+(i) planejar tarefas que representem o uso real do sistema;
+(ii) medir a taxa de sucesso e o tempo de cada tarefa;
+(iii) aplicar o questionário SUS; e
+(iv) classificar os problemas encontrados e propor melhorias para a
+versão 2.0.
+
+O restante do texto está organizado da seguinte forma: a Seção 2
+apresenta a fundamentação teórica sobre usabilidade e testes com
+usuários; a Seção 3 descreve o desenvolvimento do estudo e analisa os
+resultados; e a Seção 4 traz as considerações finais.
+
+% =====================================================================
+% 2. FUNDAMENTAÇÃO TEÓRICA (Aula 4 · 23/11)
+% =====================================================================
+\section{Fundamentação Teórica}
+
+\subsection{Usabilidade}
+
+Barbosa e Silva (2010) apresentam a usabilidade como um dos principais
+critérios de qualidade de uso de um sistema interativo. Com base na
+norma ISO 9241-11, os autores a descrevem como o grau em que um produto
+pode ser usado por usuários específicos para alcançar objetivos
+específicos com eficácia, eficiência e satisfação, em um contexto de uso
+determinado. A eficácia indica se o usuário consegue concluir a tarefa;
+a eficiência, quanto tempo e esforço ele gasta para isso; e a
+satisfação, como ele se sente ao usar o sistema.
+
+Essas três dimensões mostram que um sistema não é fácil de usar apenas
+por funcionar: ele
+precisa ser compreendido logo no primeiro uso, evitar que o usuário
+cometa erros e permitir que ele se recupere quando os erros acontecem.
+No sistema de reserva de laboratórios, por exemplo, uma regra correta,
+como o limite de 1 a 4 horas por reserva, pode gerar frustração se o
+professor só descobrir esse limite depois de preencher todo o
+formulário.
+
+\subsection{Teste de usabilidade com usuários}
+
+Barbosa e Silva (2010) distinguem os métodos de avaliação feitos por
+especialistas, que inspecionam a interface, dos métodos de observação,
+em que pessoas representativas do público-alvo usam o sistema. No teste
+de usabilidade, o avaliador prepara tarefas realistas, observa os
+participantes enquanto eles as executam e registra dados como o sucesso
+na tarefa, o tempo gasto e os erros cometidos. É comum pedir que o
+participante pense em voz alta, explicando o que está tentando fazer, o
+que ajuda a entender a causa das dificuldades, e não apenas o seu
+efeito.
+
+A quantidade de participantes é uma dúvida frequente. Nielsen e
+Landauer (1993) propuseram um modelo matemático em que a proporção de
+problemas encontrados depois de $i$ participantes é
+$1-(1-\lambda)^{i}$, sendo $\lambda$ a probabilidade de um único
+participante revelar um problema qualquer. Nos projetos analisados
+pelos autores, $\lambda$ ficou, em média, em torno de 31\%. Com esse
+valor, cinco participantes revelam cerca de 85\% dos problemas, e cada
+participante a mais traz cada vez menos descobertas novas. Os autores
+também mostram, numa análise de custo e benefício, que o melhor retorno
+está em testes com poucos participantes, repetidos depois de cada
+rodada de correções. O resultado, porém, depende de $\lambda$, que muda
+de um sistema para outro; os cinco participantes são uma referência
+prática, e não uma garantia.
+
+\subsection{Questionário SUS}
+
+A \emph{System Usability Scale} (SUS) foi proposta por Brooke (1996)
+como uma forma rápida e barata de medir a percepção de usabilidade de um
+sistema. O questionário tem dez afirmações, respondidas numa escala de 1
+(discordo totalmente) a 5 (concordo totalmente), alternando afirmações
+positivas (itens ímpares) e negativas (itens pares). Para calcular a
+nota, subtrai-se 1 da resposta de cada item ímpar e subtrai-se de 5 a
+resposta de cada item par; a soma desses valores é multiplicada por
+2,5, o que gera uma nota de 0 a 100 (BROOKE, 1996). Essa nota não é uma
+porcentagem: ela só tem sentido quando comparada a uma referência.
+
+Essa referência foi construída por Bangor, Kortum e Miller (2008), que
+analisaram mais de dois mil questionários SUS aplicados em cerca de
+duzentos testes de usabilidade, ao longo de dez anos. Os autores
+confirmaram a alta confiabilidade do questionário e encontraram uma nota
+média próxima de 70. Com base nisso, propuseram faixas de
+aceitabilidade: notas abaixo de 50 indicam usabilidade inaceitável;
+entre 50 e 70, marginal; e acima de 70, aceitável (BANGOR; KORTUM;
+MILLER, 2008). Neste estudo, essas faixas são usadas para interpretar a
+nota obtida pelo sistema.
+
+\subsection{Heurísticas de usabilidade}
+
+Nielsen e Molich (1990) propuseram a avaliação heurística, em que
+avaliadores examinam a interface com base em um pequeno conjunto de
+princípios gerais, chamados heurísticas. As nove heurísticas originais
+são: diálogo simples e natural; falar a língua do usuário; minimizar a
+carga de memória do usuário; ser consistente; fornecer \emph{feedback};
+oferecer saídas claramente marcadas; oferecer atalhos; fornecer boas
+mensagens de erro; e prevenir erros. Os autores observaram que cada
+avaliador, sozinho, encontrou apenas de 20\% a 51\% dos problemas, e
+que juntar os resultados de vários avaliadores aumenta bastante a
+quantidade de problemas encontrados (NIELSEN; MOLICH, 1990).
+
+Neste trabalho, as heurísticas não são usadas como um método de
+avaliação separado, mas como vocabulário para classificar os problemas
+observados no teste com usuários. Cada problema também é classificado
+pelo impacto que teve na tarefa observada: \emph{alto}, quando impediu o
+participante de concluí-la; \emph{médio}, quando a atrasou ou exigiu uma
+nova tentativa; e \emph{baixo}, quando causou apenas dúvida ou
+incômodo. Essa classificação ajuda a decidir quais correções devem
+entrar primeiro na versão 2.0.
+
+\subsection{Síntese}
+
+Combinadas, essas referências orientam o método deste estudo: as tarefas
+observadas medem a eficácia (taxa de sucesso) e a eficiência (tempo) do
+uso; o questionário SUS mede a satisfação; e as heurísticas, com a
+classificação por impacto, organizam os problemas encontrados numa
+lista de melhorias para a versão 2.0.
+
+% =====================================================================
+% 3. DESENVOLVIMENTO (Aula 5 · entrega até 22h)
+% =====================================================================
+\section{Desenvolvimento}
+
+\subsection{O sistema avaliado}
+\pendente{contexto do Caso 15, regras principais e telas da versão 1.0
+(pode usar a figura da arquitetura em 3 camadas da Aula 3).}
+
+\subsection{Planejamento do teste}
+\pendente{perfil dos 5 participantes, local e equipamento, tarefas,
+roteiro, termo de consentimento e métricas coletadas.}
+
+\subsection{Resultados}
+\pendente{tabela com sucesso e tempo por tarefa; nota SUS de cada
+participante e média; lista de problemas encontrados.}
+
+\subsection{Análise e propostas para a versão 2.0}
+\pendente{classificação dos problemas por heurística e por impacto
+(alto, médio ou baixo) e a melhoria proposta para cada um.}
+
+% =====================================================================
+% 4. CONSIDERAÇÕES FINAIS (Aula 6 · 30/11)
+% =====================================================================
+\section{Considerações Finais}
+\pendente{resposta à pergunta do artigo, principais achados,
+limitações (participantes eram colegas no papel de professores) e
+trabalhos futuros.}
+
+% =====================================================================
+% DECLARAÇÃO DE USO DE IA (obrigatória no modelo SBC)
+% =====================================================================
+\section*{Declaração de Uso de Inteligência Artificial}
+\pendente{informar a ferramenta de IA usada, em quais etapas do
+trabalho e com qual finalidade.}
+
+% =====================================================================
+% REFERÊNCIAS (ABNT, ordem alfabética)
+% =====================================================================
+\begin{referencias}
+
+BANGOR, A.; KORTUM, P. T.; MILLER, J. T. An empirical evaluation of the
+System Usability Scale. \emph{International Journal of Human-Computer
+Interaction}, v. 24, n. 6, p. 574--594, 2008. DOI: 10.1080/10447310802205776.
+
+BARBOSA, S. D. J.; SILVA, B. S. \emph{Interação humano-computador}. Rio
+de Janeiro: Elsevier, 2010.
+
+BROOKE, J. SUS: a ``quick and dirty'' usability scale. In: JORDAN, P. W.
+et al. (Ed.). \emph{Usability Evaluation in Industry}. London: Taylor \&
+Francis, 1996. p. 189--194.
+
+NIELSEN, J.; LANDAUER, T. K. A mathematical model of the finding of
+usability problems. In: \emph{Proceedings of the INTERCHI'93 Conference
+on Human Factors in Computing Systems}. Amsterdam: ACM, 1993.
+p. 206--213. DOI: 10.1145/169059.169166.
+
+NIELSEN, J.; MOLICH, R. Heuristic evaluation of user interfaces. In:
+\emph{Proceedings of the SIGCHI Conference on Human Factors in Computing
+Systems (CHI'90)}. Seattle: ACM, 1990. p. 249--256. DOI: 10.1145/97243.97281.
+
+\end{referencias}
+
+\end{document}

@@ -1,0 +1,221 @@
+% =====================================================================
+% MODELO PADRAO - TCC NO FORMATO SBC (Sociedade Brasileira de Computacao)
+% =====================================================================
+% Este e um modelo EM BRANCO, autocontido (nao depende de baixar
+% sbc-template.sty a parte), reproduzindo a formatacao do template
+% oficial da SBC: pagina A4, coluna UNICA do inicio ao fim (titulo,
+% resumo, abstract e corpo do texto), sem divisao em colunas.
+%
+% Validado DIRETAMENTE contra o zip oficial baixado do site da SBC em
+% www.sbc.org.br/documentosinstitucionais > Publicações > "Templates
+% para Artigos e Capítulos de Livros" (modelosparapublicaodeartigos.zip,
+% pasta Template_SBC/template-latex/sbc-template.tex + .sty). Reproduz
+% aqui, sem depender do .sty externo: A4, coluna UNICA do inicio ao fim,
+% margens 3,5/2,5/3/3 cm, fonte Times 12pt, SEM numeracao de pagina,
+% titulo 16pt, autores/endereco 12pt, e-mail footnotesize monoespacado,
+% legendas em fonte sem serifa 10pt com separador "." (nao ":"), e
+% resumo/abstract em itálico com recuo simétrico de 0,8cm — tudo
+% conforme o texto e o codigo-fonte do .sty oficial.
+%
+% COMO USAR:
+%   1. Substitua todo texto entre colchetes [ ] pelo conteudo real.
+%   2. Compile com pdflatex (rode duas vezes para os numeros de
+%      secao/figura/tabela ficarem corretos):
+%        pdflatex modelo-tcc-sbc.tex
+%        pdflatex modelo-tcc-sbc.tex
+%   3. Leia o "Manual de normas SBC para o TCC" antes de preencher —
+%      ele explica quantidade de paginas, estrutura obrigatoria e
+%      regras de citacao que este arquivo, sozinho, nao impõe.
+% =====================================================================
+
+\documentclass[a4paper,12pt]{article}
+
+% ---------------------------------------------------------------------
+% PACOTES
+% ---------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{times}
+\usepackage[a4paper,top=3.5cm,left=3cm,right=3cm,bottom=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage[bf,sf,footnotesize,indent]{caption}
+
+% ---------------------------------------------------------------------
+% ESPACAMENTO DE PARAGRAFO (igual ao padrao SBC)
+% ---------------------------------------------------------------------
+\setlength{\parindent}{1.27cm}
+\setlength{\parskip}{6pt}
+\flushbottom
+
+% ---------------------------------------------------------------------
+% FORMATO DE SECOES: 13pt negrito (secao), 12pt negrito (subsecao),
+% numero seguido de PONTO (ex.: "1. Introdução"), como no .sty oficial.
+% ---------------------------------------------------------------------
+\titleformat{\section}{\fontsize{13}{15}\bfseries}{\thesection.}{1em}{}
+\titleformat{\subsection}{\fontsize{12}{14}\bfseries}{\thesubsection.}{1em}{}
+\titleformat{\subsubsection}{\fontsize{12}{14}\bfseries\itshape}{\thesubsubsection.}{1em}{}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+% Legendas: tabela acima, figura abaixo; fonte sem serifa, 10pt (footnotesize),
+% negrito, separador "." (nao ":"), recuo de 0,8cm quando ocupar mais de 1 linha
+% — exatamente como definido em sbc-template.sty.
+\renewcommand{\captionfont}{\sffamily\footnotesize\bfseries}
+\setlength{\captionmargin}{0.8cm}
+\captionsetup{labelsep=period}
+
+% ---------------------------------------------------------------------
+% AMBIENTES RESUMO / ABSTRACT — recuo simetrico de 0,8cm e corpo em
+% itálico, reproduzindo \newenvironment{resumo}/\abstract do .sty oficial.
+% ---------------------------------------------------------------------
+\newenvironment{resumo}{%
+  \list{}{\advance\topsep by6pt\relax
+    \leftmargin=0.8cm
+    \labelwidth=0pt
+    \listparindent=0pt
+    \itemindent\listparindent
+    \rightmargin\leftmargin}\item[\hskip\labelsep\bfseries\itshape Resumo.]\itshape}%
+  {\endlist}
+
+\renewenvironment{abstract}{%
+  \list{}{\advance\topsep by6pt\relax
+    \leftmargin=0.8cm
+    \labelwidth=0pt
+    \listparindent=0pt
+    \itemindent\listparindent
+    \rightmargin\leftmargin}\item[\hskip\labelsep\bfseries\itshape Abstract.]\itshape}%
+  {\endlist}
+
+\begin{document}
+\pagestyle{empty} % a SBC exige numeracao de pagina SUPRIMIDA
+
+% =====================================================================
+% BLOCO DE TITULO, AUTORES, RESUMO E ABSTRACT
+% =====================================================================
+\begin{center}
+  % Titulo em 16pt negrito (\fontsize{16}{20}), como no .sty oficial. O
+  % modelo da SBC, em si, exige apenas o titulo no idioma do artigo; a
+  % segunda linha (inglês) é um acréscimo institucional da UNIT, feito
+  % em corpo menor para manter a hierarquia visual com o titulo oficial.
+  {\fontsize{16}{20}\selectfont\bfseries [TÍTULO DO TRABALHO EM PORTUGUÊS]}\\[4pt]
+  {\fontsize{14}{18}\selectfont\bfseries [Title of the Work in English]}\\[12pt]
+
+  % Inclua o(a) Coorientador(a) apenas se houver (ver Manual de Normas —
+  % Capítulo II, "Do Coorientador"). Nesse caso, acrescente-o logo após
+  % o(a) Orientador(a); se for de outra instituição, use um novo número
+  % de afiliação ($^{2}$) e replique o bloco de afiliação abaixo.
+  {\normalsize\bfseries [Nome do(a) Autor(a)]$^{1}$, [Nome do(a) Orientador(a)]$^{1}$[, Nome do(a) Coorientador(a)]$^{1}$}\\[6pt]
+
+  {\normalsize
+    $^{1}$[Curso/Departamento — Nome da Instituição]\\{}
+    [Cidade, Estado] -- [Sigla-UF]\\{}
+    \footnotesize\texttt{\{email.autor,email.orientador\}@dominio.edu.br}
+  }
+\end{center}
+\vspace{12pt}
+
+\begin{resumo}
+[Escreva aqui o resumo em português, em um único parágrafo, sem
+citações bibliográficas, cobrindo objetivo, método, principais
+resultados e conclusão do trabalho.]
+\end{resumo}
+\noindent\textbf{Palavras-chave:} [palavra 1], [palavra 2], [palavra 3].
+
+\vspace{6pt}
+
+\begin{abstract}
+[Write here the English version of the abstract, following the same
+structure as the Resumo above.]
+\end{abstract}
+\noindent\textbf{Keywords:} [keyword 1], [keyword 2], [keyword 3].
+
+\vspace{18pt}
+
+% =====================================================================
+% CORPO DO TEXTO — coluna única, do mesmo jeito que o resto do artigo.
+% =====================================================================
+
+\section{Introdução}
+
+[Contextualize o problema, apresente a motivação, o objetivo geral e
+os objetivos específicos do trabalho, e feche o parágrafo final
+descrevendo como o restante do texto está organizado
+(ex.: "A Seção 2 apresenta os trabalhos relacionados... ").]
+
+\section{Trabalhos Relacionados}
+
+[Revisão da literatura / referencial teórico. Cite os trabalhos no
+formato \cite{exemplo2024} e compare-os com a proposta deste TCC.]
+
+\section{Metodologia}
+
+[Descreva os materiais, métodos, ferramentas e procedimentos
+utilizados para desenvolver o trabalho.]
+
+\section{Desenvolvimento / Resultados}
+
+[Apresente o que foi construído, experimentado ou analisado, e
+discuta os resultados obtidos. Utilize figuras e tabelas conforme
+necessário -- veja os exemplos comentados abaixo.]
+
+% --- Exemplo de figura (remova o comentário e ajuste o caminho) ---
+% \begin{figure}[ht]
+%   \centering
+%   \includegraphics[width=.7\linewidth]{caminho-da-imagem}
+%   \caption{Descrição da figura.}
+%   \label{fig:exemplo}
+% \end{figure}
+
+% --- Exemplo de tabela ---
+% \begin{table}[ht]
+%   \centering
+%   \caption{Descrição da tabela.}
+%   \label{tab:exemplo}
+%   \begin{tabular}{lcc}
+%     \hline
+%     Coluna 1 & Coluna 2 & Coluna 3 \\ \hline
+%     valor & valor & valor \\ \hline
+%   \end{tabular}
+% \end{table}
+
+\section{Conclusão}
+
+[Retome o objetivo do trabalho, resuma as principais contribuições e
+resultados, aponte limitações e sugestões de trabalhos futuros.]
+
+% =====================================================================
+% DECLARACAO DE USO DE IA (obrigatoria — Manual de Normas, Art. 12)
+% =====================================================================
+\section*{Declaração de Uso de Inteligência Artificial}
+
+[Conforme a Portaria CNPq nº 2.664/2026 e o Art. 12º do Manual de Normas
+de TCC, declare aqui o uso -- ou a ausência de uso -- de ferramentas de
+Inteligência Artificial (IA) generativa neste trabalho. Se utilizou
+alguma ferramenta, informe: (i) o nome da ferramenta e, se aplicável, a
+versão ou modelo; (ii) a etapa do trabalho em que foi empregada (ex.:
+revisão textual, tradução, geração ou revisão de código-fonte, análise
+de dados); e (iii) a finalidade específica de uso em cada etapa. Caso
+nenhuma ferramenta de IA generativa tenha sido utilizada, declare
+expressamente essa ausência de uso -- esta seção não pode ser omitida.]
+
+% =====================================================================
+% REFERENCIAS
+% =====================================================================
+% Ajuste o estilo de citação conforme o que a coordenação do curso
+% exigir (numérico, como abaixo, ou autor-data no padrão ABNT). Veja
+% o manual de normas para orientação.
+
+\begin{thebibliography}{9}
+
+\bibitem{exemplo2024}
+Sobrenome, N. dos.
+\newblock Título do trabalho citado como exemplo.
+\newblock \emph{Nome do Periódico ou Evento}, v. 1, n. 1, p. 1--10, 2024.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,139 @@
+% =====================================================================
+% PROJETO DE ENGENHARIA DE SOFTWARE — AULA 1 (26/10)
+% Entender o problema e definir o escopo
+% Caso 15 · Reserva de laboratórios da faculdade
+% =====================================================================
+
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{times}
+\usepackage[a4paper,top=3cm,left=3cm,right=3cm,bottom=2.5cm]{geometry}
+\usepackage{xltabular}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\renewcommand{\arraystretch}{1.3}
+\setlist{itemsep=0pt,topsep=2pt}
+
+\titleformat{\section}{\fontsize{13}{15}\bfseries}{\thesection.}{1em}{}
+\titleformat{\subsection}{\fontsize{12}{14}\bfseries}{\thesubsection.}{1em}{}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\begin{document}
+\pagestyle{plain}
+
+\begin{center}
+  {\small\bfseries PROJETO DE ENGENHARIA DE SOFTWARE}\\[4pt]
+  {\fontsize{16}{20}\selectfont\bfseries Aula 1 · 26/10 · Entender o problema e definir o escopo}\\[6pt]
+  {\large Caso 15 · Reserva de laboratórios da faculdade}
+\end{center}
+
+\vspace{6pt}
+
+\begin{xltabular}{\linewidth}{|l|Y|}
+  \hline
+  \textbf{Professor} & Sérgio Santana \\ \hline
+  \textbf{Disciplina} & Laboratório de Engenharia de Software \\ \hline
+  \textbf{Integrante} & Wilia Francisco da Silva \\ \hline
+  \textbf{Regra para testar} & Reservas de 1 a 4 horas, para até 40 alunos \\ \hline
+\end{xltabular}
+
+% ---------------------------------------------------------------------
+\section{O problema}
+
+A coordenação da faculdade recebia pedidos de laboratório por e-mail e
+dois professores chegavam para o mesmo horário. A faculdade tem quatro
+laboratórios: o Lab 202 tem 30 lugares e os demais (Lab 101, Lab 102 e
+Lab 201) têm 40. A faculdade abre de segunda a sexta das 07:00 às 22:00
+e aos sábados até 12:00. O sistema deve mostrar a agenda dos
+laboratórios, permitir reservar e impedir choques de horário.
+
+A equipe usou a versão 1.0 do sistema, no Laboratório de Sistemas, por
+20 minutos como se fosse o cliente, e separou os requisitos que o
+sistema já atende dos que ainda faltam.
+
+% ---------------------------------------------------------------------
+\section{Requisitos funcionais}
+
+A coluna \emph{Regras} indica as regras de negócio da tela do sistema
+(RN01 a RN18) ligadas a cada requisito. Os requisitos RF06 a RF10 não
+existem na versão 1.0 e, por isso, ainda não têm regras na tela.
+
+\begin{xltabular}{\linewidth}{|c|Y|>{\centering\arraybackslash}p{2.3cm}|>{\centering\arraybackslash}p{2.3cm}|}
+  \hline
+  \textbf{Código} & \textbf{Requisito} & \textbf{Regras} & \textbf{Versão 1.0} \\ \hline
+  RF01 & Cadastrar uma reserva com professor, disciplina, laboratório, data, horário de início, duração e número de alunos. & RN01 a RN06, RN09 a RN13 & Atende \\ \hline
+  RF02 & Impedir reservas com horários sobrepostos no mesmo laboratório. & RN07 & \textbf{Atende\newline parcialmente}$^{1}$ \\ \hline
+  RF03 & Cancelar ou excluir uma reserva, liberando o horário para outros professores. & RN08, RN18 & \textbf{Atende\newline parcialmente}$^{2}$ \\ \hline
+  RF04 & Listar as reservas por data e horário e buscar pelo nome do professor ou pela disciplina. & RN14, RN15, RN17 & \textbf{Atende\newline parcialmente}$^{3}$ \\ \hline
+  RF05 & Mostrar a ocupação de cada laboratório no dia seguinte. & RN16 & \textbf{Atende\newline parcialmente}$^{4}$ \\ \hline
+  RF06 & Exibir a agenda de cada laboratório em grade (dia $\times$ horário), destacando os horários livres. & -- & \textbf{Falta} \\ \hline
+  RF07 & Consultar a disponibilidade de um laboratório antes de preencher a reserva. & -- & \textbf{Falta} \\ \hline
+  RF08 & Editar uma reserva já feita (data, horário ou laboratório). & -- & \textbf{Falta} \\ \hline
+  RF09 & Identificar o usuário por login, separando o perfil de professor do perfil da coordenação. & -- & \textbf{Falta} \\ \hline
+  RF10 & Notificar o professor por e-mail quando a reserva for confirmada ou cancelada. & -- & \textbf{Falta} \\ \hline
+\end{xltabular}
+
+{\small
+$^{1}$ RF02 (RN07): bloqueia apenas reservas com o mesmo horário de início.
+Reservas cujos horários se cruzam são aceitas (exemplo: Lab 101, 06/11/2026,
+das 19:00 às 22:00 e das 20:00 às 21:00).
+
+$^{2}$ RF03 (RN08): a reserva é cancelada, mas o horário não é liberado. Uma
+nova reserva no mesmo laboratório, data e horário é recusada com a mensagem
+``já está reservado nesse horário''.
+
+$^{3}$ RF04 (RN15): a busca encontra pelo nome do professor, mas não pela
+disciplina.
+
+$^{4}$ RF05 (RN16): o painel Ocupação de amanhã soma também as horas das
+reservas canceladas.
+}
+
+% ---------------------------------------------------------------------
+\section{Requisitos não funcionais (qualidades)}
+
+\begin{xltabular}{\linewidth}{|c|l|Y|}
+  \hline
+  \textbf{Código} & \textbf{Qualidade} & \textbf{Descrição} \\ \hline
+  RNF01 & Usabilidade & Ser fácil de usar no celular: um professor faz uma reserva em menos de 2 minutos, sem treinamento. \\ \hline
+  RNF02 & Desempenho  & Mostrar a agenda e o resultado da busca em até 2 segundos. \\ \hline
+  RNF03 & Segurança   & Permitir que apenas a coordenação exclua ou altere reservas de outros professores. \\ \hline
+\end{xltabular}
+
+% ---------------------------------------------------------------------
+\section{O que fica fora do sistema}
+
+\begin{itemize}[leftmargin=1.2cm]
+  \item Controle de presença dos alunos nas aulas.
+  \item Manutenção e inventário dos computadores dos laboratórios.
+  \item Reserva de outros espaços da faculdade, como auditório e salas comuns.
+  \item Integração com o sistema acadêmico da faculdade (matrículas e notas).
+  \item Acesso de alunos ao sistema (consulta ou reserva de laboratórios).
+\end{itemize}
+
+% ---------------------------------------------------------------------
+\section{Histórias de usuário}
+
+Cada história foi escrita a partir de um dos requisitos da Seção 2.
+
+\begin{xltabular}{\linewidth}{|c|Y|c|}
+  \hline
+  \textbf{Nº} & \textbf{História} & \textbf{Requisito} \\ \hline
+  H01 & Como \textbf{professor}, quero ver a agenda de um laboratório, para escolher um horário livre sem tentar várias vezes. & RF06 \\ \hline
+  H02 & Como \textbf{professor}, quero reservar um laboratório pelo celular, para não precisar mandar e-mail para a coordenação. & RF01 \\ \hline
+  H03 & Como \textbf{professor}, quero cancelar minha reserva, para liberar o laboratório para outro colega. & RF03 \\ \hline
+  H04 & Como \textbf{professor}, quero alterar a data ou o horário da reserva, para não precisar cancelar e criar outra. & RF08 \\ \hline
+  H05 & Como \textbf{coordenação}, quero buscar as reservas de um professor ou disciplina, para resolver dúvidas rapidamente. & RF04 \\ \hline
+  H06 & Como \textbf{professor}, quero receber um aviso quando a reserva for confirmada, para ter certeza de que o laboratório está garantido. & RF10 \\ \hline
+\end{xltabular}
+
+\end{document}

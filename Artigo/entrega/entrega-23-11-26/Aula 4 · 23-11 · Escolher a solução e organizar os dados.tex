@@ -1,0 +1,247 @@
+% =====================================================================
+% PROJETO DE ENGENHARIA DE SOFTWARE — AULA 4 (23/11)
+% Escolher a solução e organizar os dados
+% Caso 15 · Reserva de laboratórios da faculdade
+% O diagrama fica em figuras/ e é incluído com \input.
+% =====================================================================
+
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{times}
+\usepackage[a4paper,top=3cm,left=3cm,right=3cm,bottom=2.5cm]{geometry}
+\usepackage{xltabular}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.multipart}
+\usepackage{caption}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\renewcommand{\arraystretch}{1.3}
+\setlist{itemsep=0pt,topsep=2pt}
+\captionsetup{font=small,labelfont=bf,labelsep=period}
+
+\titleformat{\section}{\fontsize{13}{15}\bfseries}{\thesection.}{1em}{}
+\titleformat{\subsection}{\fontsize{12}{14}\bfseries}{\thesubsection.}{1em}{}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\begin{document}
+\pagestyle{plain}
+
+\begin{center}
+  {\small\bfseries PROJETO DE ENGENHARIA DE SOFTWARE}\\[4pt]
+  {\fontsize{16}{20}\selectfont\bfseries Aula 4 · 23/11 · Escolher a solução e organizar os dados}\\[6pt]
+  {\large Caso 15 · Reserva de laboratórios da faculdade}
+\end{center}
+
+\vspace{6pt}
+
+\begin{xltabular}{\linewidth}{|l|Y|}
+  \hline
+  \textbf{Professor} & Sérgio Santana \\ \hline
+  \textbf{Disciplina} & Laboratório de Engenharia de Software \\ \hline
+  \textbf{Integrante} & Wilia Francisco da Silva \\ \hline
+  \textbf{Regra para testar} & Reservas de 1 a 4 horas, para até 40 alunos \\ \hline
+\end{xltabular}
+
+% ---------------------------------------------------------------------
+\section{Comparação de duas formas de construir o sistema}
+
+Foram comparadas duas opções para a versão 2.0: um \emph{aplicativo
+instalado} no celular (Android e iPhone) e um \emph{site que abre no
+celular}, isto é, um site responsivo que se adapta à tela do celular e
+do computador.
+
+\begin{xltabular}{\linewidth}{|>{\raggedright\arraybackslash}p{2.9cm}|Y|Y|}
+  \hline
+  \textbf{Critério} & \textbf{Aplicativo instalado} & \textbf{Site que abre no celular} \\ \hline
+  \endhead
+  Custo & Mais alto: é preciso fazer e manter versões para Android e iPhone e pagar as contas das lojas (Google Play: taxa única de US\$ 25; Apple: US\$ 99 por ano). & Mais baixo: um único código serve para celular e computador; o custo principal é a hospedagem. \\ \hline
+  Facilidade para o usuário & O professor precisa encontrar, baixar e instalar o aplicativo antes da primeira reserva; ocupa espaço para um uso de poucas vezes por semana. & Abre por um link, sem instalar nada. Funciona no celular e no computador da sala de aula. \\ \hline
+  Manutenção & Cada correção passa pela revisão das lojas e só chega a quem atualizar o aplicativo; podem existir várias versões em uso ao mesmo tempo. & A correção é feita no servidor e vale na hora para todos os usuários; existe uma só versão em uso. \\ \hline
+  Uso pela coordenação & A coordenação trabalha no computador; seria preciso fazer também uma versão para computador. & O mesmo site atende professores no celular e a coordenação no computador. \\ \hline
+  Avisos ao professor & Pode enviar notificações no próprio celular. & Envia os avisos por e-mail (RF10), o que já atende ao caso. \\ \hline
+\end{xltabular}
+
+% ---------------------------------------------------------------------
+\section{Solução escolhida e justificativa}
+
+A solução escolhida é o \textbf{site que abre no celular}.
+
+O problema do caso é que a coordenação recebia os pedidos de laboratório
+por e-mail e dois professores chegavam para o mesmo horário. Para
+resolver isso, todos precisam consultar e alterar \emph{a mesma agenda,
+ao mesmo tempo}: quando um professor reserva o Lab 101, o horário deve
+aparecer ocupado na hora para todos os outros. Um site ligado a um único
+servidor garante isso de forma simples, para quem está no celular e para
+quem está no computador.
+
+Além disso, o professor reserva laboratório poucas vezes por semana.
+Exigir que ele instale um aplicativo cria uma barreira que pode fazê-lo
+voltar a pedir por e-mail, que é exatamente o risco R04 da Aula 2 e o
+contrário do RNF01 (fazer uma reserva em menos de 2 minutos, sem
+treinamento). O site também tem menor custo e manutenção mais simples,
+e a versão 1.0 já funciona no navegador, o que facilita a migração dos
+dados (risco R01). A única vantagem clara do aplicativo, as notificações
+no celular, é coberta pelos avisos por e-mail previstos no RF10.
+
+% ---------------------------------------------------------------------
+\section{Informações que o sistema guarda}
+
+As informações foram levantadas a partir dos campos do formulário
+\emph{Nova reserva} e das colunas da tabela \emph{Registros} da versão
+1.0, e agrupadas por assunto. A Figura~\ref{fig:dados} mostra os grupos
+ligados por setas; o sinal \textbf{+} marca o que precisa ser
+acrescentado na versão 2.0.
+
+\begin{center}
+  \input{figuras/dados}
+  \captionof{figure}{Informações que o sistema guarda, agrupadas por assunto.}
+  \label{fig:dados}
+\end{center}
+
+\begin{xltabular}{\linewidth}{|l|>{\raggedright\arraybackslash}p{3.4cm}|Y|Y|}
+  \hline
+  \textbf{Grupo} & \textbf{Informação} & \textbf{Onde aparece na versão 1.0} & \textbf{Versão 2.0} \\ \hline
+  \endhead
+  Reserva & Professor & Campo do formulário e coluna \emph{Professor} & Passa a vir do usuário que fez login (RF09). \\ \hline
+  Reserva & Disciplina & Campo do formulário e coluna \emph{Disciplina} & Mantém. \\ \hline
+  Reserva & Laboratório & Campo (lista) e coluna \emph{Laboratório} & Mantém, ligado ao grupo Laboratório. \\ \hline
+  Reserva & Data & Campo do formulário e coluna \emph{Data} & Mantém. \\ \hline
+  Reserva & Início & Campo (lista) e coluna \emph{Horário} & Mantém. \\ \hline
+  Reserva & Duração em horas & Campo do formulário & Mantém. \\ \hline
+  Reserva & Término & Calculado (início + duração) e mostrado na coluna \emph{Horário} & Mantém, calculado. \\ \hline
+  Reserva & Número de alunos & Campo do formulário e coluna \emph{Alunos} & Mantém. \\ \hline
+  Reserva & Situação & Coluna \emph{Situação} (Reservado ou Cancelada) & Mantém. \\ \hline
+  Reserva & Data de criação & Guardada pelo sistema, sem aparecer na tela & Mantém. \\ \hline
+  Reserva & Datas de alteração e de cancelamento & Não existem & \textbf{Acrescentar} (RF08 e RF03). \\ \hline
+  Laboratório & Nome e capacidade & Fixos no sistema: Lab 202 com 30 lugares e os demais com 40 & \textbf{Acrescentar} um cadastro próprio, para mudar a capacidade sem alterar o código. \\ \hline
+  Usuário & Nome, e-mail, senha e perfil & Não existem & \textbf{Acrescentar} (RF09 e RNF03). \\ \hline
+  Aviso & Reserva, e-mail, tipo e data de envio & Não existem & \textbf{Acrescentar} (RF10). \\ \hline
+\end{xltabular}
+
+% ---------------------------------------------------------------------
+\section{Artigo: fundamentação teórica}
+
+\textbf{Tema 6 · Teste de usabilidade em aplicativos}
+
+\subsection*{Usabilidade}
+
+Barbosa e Silva (2010) apresentam a usabilidade como um dos principais
+critérios de qualidade de uso de um sistema interativo. Com base na
+norma ISO 9241-11, os autores a descrevem como o grau em que um produto
+pode ser usado por usuários específicos para alcançar objetivos
+específicos com eficácia, eficiência e satisfação, em um contexto de uso
+determinado. A eficácia indica se o usuário consegue concluir a tarefa;
+a eficiência, quanto tempo e esforço ele gasta para isso; e a
+satisfação, como ele se sente ao usar o sistema.
+
+Essas três dimensões mostram que um sistema não é fácil de usar apenas
+por funcionar: ele
+precisa ser compreendido logo no primeiro uso, evitar que o usuário
+cometa erros e permitir que ele se recupere quando os erros acontecem.
+No sistema de reserva de laboratórios, por exemplo, uma regra correta,
+como o limite de 1 a 4 horas por reserva, pode gerar frustração se o
+professor só descobrir esse limite depois de preencher todo o
+formulário.
+
+\subsection*{Teste de usabilidade com usuários}
+
+Barbosa e Silva (2010) distinguem os métodos de avaliação feitos por
+especialistas, que inspecionam a interface, dos métodos de observação,
+em que pessoas representativas do público-alvo usam o sistema. No teste
+de usabilidade, o avaliador prepara tarefas realistas, observa os
+participantes enquanto eles as executam e registra dados como o sucesso
+na tarefa, o tempo gasto e os erros cometidos. É comum pedir que o
+participante pense em voz alta, explicando o que está tentando fazer, o
+que ajuda a entender a causa das dificuldades, e não apenas o seu
+efeito.
+
+A quantidade de participantes é uma dúvida frequente. Nielsen e
+Landauer (1993) propuseram um modelo matemático em que a proporção de
+problemas encontrados depois de $i$ participantes é
+$1-(1-\lambda)^{i}$, sendo $\lambda$ a probabilidade de um único
+participante revelar um problema qualquer. Nos projetos analisados
+pelos autores, $\lambda$ ficou, em média, em torno de 31\%. Com esse
+valor, cinco participantes revelam cerca de 85\% dos problemas, e cada
+participante a mais traz cada vez menos descobertas novas. Os autores
+também mostram, numa análise de custo e benefício, que o melhor retorno
+está em testes com poucos participantes, repetidos depois de cada
+rodada de correções. O resultado, porém, depende de $\lambda$, que muda
+de um sistema para outro; os cinco participantes são uma referência
+prática, e não uma garantia.
+
+\subsection*{Questionário SUS}
+
+A \emph{System Usability Scale} (SUS) foi proposta por Brooke (1996)
+como uma forma rápida e barata de medir a percepção de usabilidade de um
+sistema. O questionário tem dez afirmações, respondidas numa escala de 1
+(discordo totalmente) a 5 (concordo totalmente), alternando afirmações
+positivas (itens ímpares) e negativas (itens pares). Para calcular a
+nota, subtrai-se 1 da resposta de cada item ímpar e subtrai-se de 5 a
+resposta de cada item par; a soma desses valores é multiplicada por
+2,5, o que gera uma nota de 0 a 100 (BROOKE, 1996). Essa nota não é uma
+porcentagem: ela só tem sentido quando comparada a uma referência.
+
+Essa referência foi construída por Bangor, Kortum e Miller (2008), que
+analisaram mais de dois mil questionários SUS aplicados em cerca de
+duzentos testes de usabilidade, ao longo de dez anos. Os autores
+confirmaram a alta confiabilidade do questionário e encontraram uma nota
+média próxima de 70. Com base nisso, propuseram faixas de
+aceitabilidade: notas abaixo de 50 indicam usabilidade inaceitável;
+entre 50 e 70, marginal; e acima de 70, aceitável (BANGOR; KORTUM;
+MILLER, 2008). Neste estudo, essas faixas são usadas para interpretar a
+nota obtida pelo sistema.
+
+\subsection*{Heurísticas de usabilidade}
+
+Nielsen e Molich (1990) propuseram a avaliação heurística, em que
+avaliadores examinam a interface com base em um pequeno conjunto de
+princípios gerais, chamados heurísticas. As nove heurísticas originais
+são: diálogo simples e natural; falar a língua do usuário; minimizar a
+carga de memória do usuário; ser consistente; fornecer \emph{feedback};
+oferecer saídas claramente marcadas; oferecer atalhos; fornecer boas
+mensagens de erro; e prevenir erros. Os autores observaram que cada
+avaliador, sozinho, encontrou apenas de 20\% a 51\% dos problemas, e
+que juntar os resultados de vários avaliadores aumenta bastante a
+quantidade de problemas encontrados (NIELSEN; MOLICH, 1990).
+
+Neste trabalho, as heurísticas não são usadas como um método de
+avaliação separado, mas como vocabulário para classificar os problemas
+observados no teste com usuários. Cada problema também é classificado
+pelo impacto que teve na tarefa observada: \emph{alto}, quando impediu o
+participante de concluí-la; \emph{médio}, quando a atrasou ou exigiu uma
+nova tentativa; e \emph{baixo}, quando causou apenas dúvida ou
+incômodo. Essa classificação ajuda a decidir quais correções devem
+entrar primeiro na versão 2.0.
+
+\subsection*{Síntese}
+
+Combinadas, essas referências orientam o método deste estudo: as tarefas
+observadas medem a eficácia (taxa de sucesso) e a eficiência (tempo) do
+uso; o questionário SUS mede a satisfação; e as heurísticas, com a
+classificação por impacto, organizam os problemas encontrados numa
+lista de melhorias para a versão 2.0.
+
+\subsection*{Referências citadas na fundamentação}
+
+{\small
+BANGOR, A.; KORTUM, P. T.; MILLER, J. T. An empirical evaluation of the System Usability Scale. \emph{International Journal of Human-Computer Interaction}, v. 24, n. 6, p. 574--594, 2008. DOI: 10.1080/10447310802205776.
+
+BARBOSA, S. D. J.; SILVA, B. S. \emph{Interação humano-computador}. Rio de Janeiro: Elsevier, 2010.
+
+BROOKE, J. SUS: a ``quick and dirty'' usability scale. In: JORDAN, P. W. et al. (Ed.). \emph{Usability Evaluation in Industry}. London: Taylor \& Francis, 1996. p. 189--194.
+
+NIELSEN, J.; LANDAUER, T. K. A mathematical model of the finding of usability problems. In: \emph{Proceedings of the INTERCHI'93 Conference on Human Factors in Computing Systems}. Amsterdam: ACM, 1993. p. 206--213. DOI: 10.1145/169059.169166.
+
+NIELSEN, J.; MOLICH, R. Heuristic evaluation of user interfaces. In: \emph{Proceedings of the SIGCHI Conference on Human Factors in Computing Systems (CHI'90)}. Seattle: ACM, 1990. p. 249--256. DOI: 10.1145/97243.97281.
+}
+
+\end{document}

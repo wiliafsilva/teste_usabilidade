@@ -1,0 +1,3 @@
+# Tema claro fixo: o cartão preso no topo usa fundo branco, e o sistema embutido também é claro.
+[theme]
+base = "light"

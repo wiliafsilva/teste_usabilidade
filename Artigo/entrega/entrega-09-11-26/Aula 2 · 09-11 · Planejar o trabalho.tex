@@ -1,0 +1,146 @@
+% =====================================================================
+% PROJETO DE ENGENHARIA DE SOFTWARE — AULA 2 (09/11)
+% Planejar o trabalho
+% Caso 15 · Reserva de laboratórios da faculdade
+% =====================================================================
+
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{times}
+\usepackage[a4paper,top=3cm,left=3cm,right=3cm,bottom=2.5cm]{geometry}
+\usepackage{xltabular}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\renewcommand{\arraystretch}{1.3}
+\setlist{itemsep=0pt,topsep=2pt}
+
+\titleformat{\section}{\fontsize{13}{15}\bfseries}{\thesection.}{1em}{}
+\titleformat{\subsection}{\fontsize{12}{14}\bfseries}{\thesubsection.}{1em}{}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\begin{document}
+\pagestyle{plain}
+
+\begin{center}
+  {\small\bfseries PROJETO DE ENGENHARIA DE SOFTWARE}\\[4pt]
+  {\fontsize{16}{20}\selectfont\bfseries Aula 2 · 09/11 · Planejar o trabalho}\\[6pt]
+  {\large Caso 15 · Reserva de laboratórios da faculdade}
+\end{center}
+
+\vspace{6pt}
+
+\begin{xltabular}{\linewidth}{|l|Y|}
+  \hline
+  \textbf{Professor} & Sérgio Santana \\ \hline
+  \textbf{Disciplina} & Laboratório de Engenharia de Software \\ \hline
+  \textbf{Integrante} & Wilia Francisco da Silva \\ \hline
+  \textbf{Regra para testar} & Reservas de 1 a 4 horas, para até 40 alunos \\ \hline
+\end{xltabular}
+
+% ---------------------------------------------------------------------
+\section{Tarefas da versão 2.0}
+
+As histórias da Aula 1 foram quebradas em tarefas menores. Cada
+requisito que falta na versão 1.0 (RF06 a RF10) virou trabalho da
+versão 2.0. Os requisitos atendidos apenas parcialmente (RF02 a RF05)
+viraram a tarefa T14, que corrige os defeitos encontrados. O
+responsável por todas as tarefas é o único integrante da equipe.
+
+\begin{xltabular}{\linewidth}{|c|Y|c|c|c|}
+  \hline
+  \textbf{Nº} & \textbf{Tarefa} & \textbf{Origem} & \textbf{Sem.} & \textbf{Responsável} \\ \hline
+  T01 & Criar a tela de login com usuário e senha. & RF09 & 1 & Wilia \\ \hline
+  T02 & Separar os perfis de professor e de coordenação. & RF09, RNF03 & 1 & Wilia \\ \hline
+  T03 & Fazer cópia de segurança das reservas atuais e migrar os dados para a versão 2.0. & Risco R01 & 1 & Wilia \\ \hline
+  T04 & Desenhar a grade da agenda (dia $\times$ horário) de cada laboratório. & H01, RF06 & 2 & Wilia \\ \hline
+  T05 & Destacar na grade os horários livres e os ocupados. & H01, RF06 & 2 & Wilia \\ \hline
+  T06 & Mostrar a disponibilidade ao escolher laboratório e data no formulário. & H01, RF07 & 2 & Wilia \\ \hline
+  T07 & Ajustar o formulário e a agenda para telas de celular. & H02, RNF01 & 2 & Wilia \\ \hline
+  T08 & Criar o botão Editar na lista de reservas. & H04, RF08 & 3 & Wilia \\ \hline
+  T09 & Validar as regras de negócio também ao editar (choque de horário, capacidade e horário de funcionamento). & H04, RF08 & 3 & Wilia \\ \hline
+  T10 & Configurar o envio de e-mail do sistema. & H06, RF10 & 3 & Wilia \\ \hline
+  T11 & Enviar aviso ao professor quando a reserva for confirmada ou cancelada. & H06, RF10 & 3 & Wilia \\ \hline
+  T12 & Executar de novo os casos de teste da versão 1.0 e testar as funções novas. & Risco R02 & 4 & Wilia \\ \hline
+  T13 & Validar as telas novas com a coordenação e publicar a versão 2.0. & Risco R04 & 4 & Wilia \\ \hline
+  T14 & Corrigir os defeitos da versão 1.0: choque de horário, cancelamento que não libera o horário, busca por disciplina e painel de ocupação. & RF02 a RF05 & 1 & Wilia \\ \hline
+\end{xltabular}
+
+% ---------------------------------------------------------------------
+\section{Quadro Kanban}
+
+Situação do quadro no início do trabalho. Só o RF01, que a versão 1.0
+atende por completo, fica na coluna \emph{Feito}. Os requisitos RF02 a
+RF05 atendem apenas em parte e entram em \emph{A fazer} como a tarefa
+T14.
+
+\begin{xltabular}{\linewidth}{|Y|Y|Y|}
+  \hline
+  \textbf{A fazer} & \textbf{Fazendo} & \textbf{Feito} \\ \hline
+  T14 Corrigir RF02 a RF05 &
+  T01 Tela de login &
+  RF01 Cadastrar reserva \\
+  T02 Perfis de professor e coordenação & & \\
+  T03 Cópia de segurança e migração & & \\
+  T04 Grade da agenda & & \\
+  T05 Horários livres e ocupados & & \\
+  T06 Disponibilidade no formulário & & \\
+  T07 Ajuste para celular & & \\
+  T08 Botão Editar & & \\
+  T09 Regras ao editar & & \\
+  T10 Envio de e-mail & & \\
+  T11 Aviso ao professor & & \\
+  T12 Testes da versão 2.0 & & \\
+  T13 Validação e publicação & & \\ \hline
+\end{xltabular}
+
+% ---------------------------------------------------------------------
+\section{Cronograma de 4 semanas}
+
+\begin{xltabular}{\linewidth}{|c|Y|c|}
+  \hline
+  \textbf{Semana} & \textbf{O que será feito} & \textbf{Tarefas} \\ \hline
+  1 & Login, perfis de acesso, cópia de segurança dos dados atuais e correção dos defeitos da versão 1.0. & T01 a T03, T14 \\ \hline
+  2 & Agenda em grade, consulta de disponibilidade e ajuste para celular. & T04 a T07 \\ \hline
+  3 & Edição de reservas e avisos por e-mail. & T08 a T11 \\ \hline
+  4 & Testes, validação com a coordenação e publicação da versão 2.0. & T12 e T13 \\ \hline
+\end{xltabular}
+
+% ---------------------------------------------------------------------
+\section{Riscos}
+
+\begin{xltabular}{\linewidth}{|c|Y|Y|}
+  \hline
+  \textbf{Nº} & \textbf{Risco} & \textbf{O que fazer} \\ \hline
+  R01 & Ao alterar o sistema que já está em uso, as reservas feitas na versão 1.0 serem perdidas ou corrompidas. & Fazer cópia de segurança antes de qualquer mudança e testar a migração numa cópia dos dados (T03). \\ \hline
+  R02 & As funções novas quebrarem o que já funciona, como o cadastro de reservas e as correções feitas na T14. & Executar de novo todos os casos de teste da versão 1.0 antes de publicar (T12). \\ \hline
+  R03 & O único integrante ficar doente ou sem tempo numa semana de entrega. & Manter o quadro Kanban atualizado e deixar 2 dias de folga no fim de cada semana para recuperar atrasos. \\ \hline
+  R04 & Os professores não se adaptarem à agenda nova e voltarem a pedir laboratório por e-mail. & Mostrar as telas à coordenação antes de publicar e manter o atendimento por e-mail durante a primeira semana. \\ \hline
+  R05 & Os avisos por e-mail não chegarem ou caírem na caixa de spam. & Mostrar a confirmação também na tela do sistema e testar o envio com e-mails institucionais. \\ \hline
+\end{xltabular}
+
+% ---------------------------------------------------------------------
+\section{Artigo: fontes sobre o tema}
+
+Tema 6 · Teste de usabilidade em aplicativos. Pergunta guia: como
+testar se um aplicativo é fácil de usar?
+
+\begin{xltabular}{\linewidth}{|c|Y|Y|}
+  \hline
+  \textbf{Nº} & \textbf{Referência} & \textbf{Uso no artigo} \\ \hline
+  F1 & NIELSEN, J.; LANDAUER, T. K. A mathematical model of the finding of usability problems. In: \emph{Proceedings of the INTERCHI'93 Conference on Human Factors in Computing Systems}. Amsterdam: ACM, 1993. p. 206--213. DOI: 10.1145/169059.169166. & Artigo científico. Justifica o teste com 5 usuários. \\ \hline
+  F2 & NIELSEN, J.; MOLICH, R. Heuristic evaluation of user interfaces. In: \emph{Proceedings of the SIGCHI Conference on Human Factors in Computing Systems (CHI'90)}. Seattle: ACM, 1990. p. 249--256. DOI: 10.1145/97243.97281. & Artigo científico. Base para classificar os problemas encontrados. \\ \hline
+  F3 & BROOKE, J. SUS: a ``quick and dirty'' usability scale. In: JORDAN, P. W. et al. (Ed.). \emph{Usability Evaluation in Industry}. London: Taylor \& Francis, 1996. p. 189--194. & Questionário SUS aplicado após o teste. \\ \hline
+  F4 & BANGOR, A.; KORTUM, P. T.; MILLER, J. T. An empirical evaluation of the System Usability Scale. \emph{International Journal of Human-Computer Interaction}, v. 24, n. 6, p. 574--594, 2008. DOI: 10.1080/10447310802205776. & Artigo científico. Interpretação da nota do SUS. \\ \hline
+  F5 & BARBOSA, S. D. J.; SILVA, B. S. \emph{Interação humano-computador}. Rio de Janeiro: Elsevier, 2010. & Livro em português. Conceito de usabilidade e métodos de avaliação. \\ \hline
+\end{xltabular}
+
+\end{document}

@@ -1,0 +1,50 @@
+% Tela 2 · Nova reserva (H02 · H01 · RF07)
+\begin{tikzpicture}[font=\sffamily\scriptsize,
+  campo/.style={draw, minimum height=0.5cm, anchor=north west, inner sep=3pt, text depth=0pt}]
+  % aparelho e barra superior
+  \draw[thick, rounded corners=8pt] (0,0) rectangle (5.6,10.4);
+  \fill[gray!25] (0.2,9.6) rectangle (5.4,10.2);
+  \node[anchor=west] at (0.3,9.9) {\textbf{Reserva de Laboratórios}};
+  \node[anchor=east] at (5.3,9.9) {Sair};
+  \node[anchor=west] at (0.3,9.25) {\small\textbf{Nova reserva}};
+
+  % campos
+  \node[anchor=west] at (0.3,8.85) {Professor};
+  \draw[fill=gray!15] (0.3,8.1) rectangle (5.3,8.6);
+  \node[anchor=west, gray] at (0.4,8.35) {Wilia F. da Silva (vem do login)};
+
+  \node[anchor=west] at (0.3,7.85) {Laboratório};
+  \draw (0.3,7.1) rectangle (5.3,7.6);
+  \node[anchor=west] at (0.4,7.35) {Lab 101 (40 lugares)};
+  \node[anchor=east] at (5.2,7.35) {$\blacktriangledown$};
+
+  \node[anchor=west] at (0.3,6.85) {Data};
+  \draw (0.3,6.1) rectangle (5.3,6.6);
+  \node[anchor=west] at (0.4,6.35) {17/11/2026};
+
+  \node[anchor=west] at (0.3,5.85) {Início};
+  \draw (0.3,5.1) rectangle (2.6,5.6);
+  \node[anchor=west] at (0.4,5.35) {13:00};
+  \node[anchor=east] at (2.5,5.35) {$\blacktriangledown$};
+  \node[anchor=west] at (3.0,5.85) {Duração};
+  \draw (3.0,5.1) rectangle (5.3,5.6);
+  \node[anchor=west] at (3.1,5.35) {2 horas};
+  \node[anchor=east] at (5.2,5.35) {$\blacktriangledown$};
+  \node[anchor=west] at (0.3,4.85) {Término: \textbf{15:00} (calculado)};
+
+  \node[anchor=west] at (0.3,4.45) {Disciplina};
+  \draw (0.3,3.7) rectangle (5.3,4.2);
+  \node[anchor=west] at (0.4,3.95) {Engenharia de Software};
+
+  \node[anchor=west] at (0.3,3.45) {Número de alunos};
+  \draw (0.3,2.7) rectangle (2.6,3.2);
+  \node[anchor=west] at (0.4,2.95) {30};
+  \node[anchor=west, gray] at (2.7,2.95) {máx. 40 neste lab};
+
+  % disponibilidade e botão
+  \draw[fill=green!12, draw=green!50!black] (0.3,1.95) rectangle (5.3,2.45);
+  \node[anchor=west] at (0.4,2.2) {$\checkmark$ Lab 101 livre das 13:00 às 15:00};
+  \draw[fill=black!80, rounded corners=3pt] (0.3,1.1) rectangle (5.3,1.7);
+  \node[white] at (2.8,1.4) {\textbf{Confirmar reserva}};
+  \node[gray, text width=5cm, align=center] at (2.8,0.55) {Duração só de 1 a 4 horas.\\Horários fechados não aparecem.};
+\end{tikzpicture}

@@ -1,0 +1,1221 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Laboratório de Sistemas</title>
+<meta name="author" content="Sérgio Santana">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+body { margin: 0 }
+img { max-width: 100% }
+/* Layout: bancada de testes. Página inicial em grade de 15 casos, cada sistema com formulário à esquerda e registros à direita. */
+:root {
+  --bg: #F3F5F4; --surface: #FFFFFF; --sunk: #E8ECEA; --line: #D3DAD7;
+  --fg: #17211E; --muted: #5B6863; --accent: #0E6B5C; --accent-fg: #FFFFFF; --accent-soft: #DCEFEA;
+  --warn: #9A5B00; --warn-soft: #FFF1D6; --bad: #B3261E; --bad-soft: #FCE4E2; --ok: #1F7A3A; --ok-soft: #E0F3E5;
+  --sans: "IBM Plex Sans", "Segoe UI", Arial, sans-serif; --mono: "IBM Plex Mono", Consolas, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0F1513; --surface: #17201D; --sunk: #1F2A26; --line: #2E3B36;
+  --fg: #E6EEEB; --muted: #9AAAA4; --accent: #4CC2AC; --accent-fg: #06201B; --accent-soft: #16352F;
+  --warn: #F2B65A; --warn-soft: #3A2C12; --bad: #FF8A80; --bad-soft: #3D1A18; --ok: #7DD99A; --ok-soft: #173522; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0F1513; --surface: #17201D; --sunk: #1F2A26; --line: #2E3B36;
+  --fg: #E6EEEB; --muted: #9AAAA4; --accent: #4CC2AC; --accent-fg: #06201B; --accent-soft: #16352F;
+  --warn: #F2B65A; --warn-soft: #3A2C12; --bad: #FF8A80; --bad-soft: #3D1A18; --ok: #7DD99A; --ok-soft: #173522; color-scheme: dark }
+* { box-sizing: border-box }
+[hidden] { display: none !important }
+body { background: var(--bg); color: var(--fg); font: 15px/1.5 var(--sans); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 20px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { margin: 0; text-wrap: balance; line-height: 1.2 }
+h1 { font-size: 26px; font-weight: 700 }
+h2 { font-size: 18px; font-weight: 600 }
+h3 { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted) }
+p { margin: 0 }
+.eyebrow { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent) }
+.muted { color: var(--muted) }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums }
+button, select, input { font: inherit; color: inherit }
+button { cursor: pointer }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+
+/* Início */
+.intro { display: grid; gap: 8px; margin-bottom: 22px; max-width: 70ch }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px }
+.case { display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: start; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; text-decoration: none; color: inherit; }
+.case:hover { border-color: var(--accent) }
+.case .num { width: 44px; height: 44px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font: 600 16px var(--mono) }
+.case strong { display: block; font-size: 15px }
+.case span { display: block; font-size: 13px; color: var(--muted) }
+.howto { margin-top: 26px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 8px; max-width: 80ch }
+.howto ol { margin: 0; padding-left: 20px; display: grid; gap: 4px }
+
+/* Sistema */
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-bottom: 16px }
+.back { background: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; color: var(--muted); text-decoration: none; font-size: 14px }
+.back:hover { color: var(--fg); border-color: var(--fg) }
+.title { display: grid; gap: 2px; flex: 1; min-width: 0 }
+.badge { font: 500 12px var(--mono); padding: 3px 8px; border-radius: 99px; background: var(--sunk); color: var(--muted); white-space: nowrap }
+.problem { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; color: var(--muted); max-width: 100% }
+.layout { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 16px; align-items: start }
+@media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr) } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; min-width: 0 }
+form { display: grid; gap: 10px }
+label { display: grid; gap: 4px; font-size: 13px; font-weight: 500 }
+input, select { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); }
+input:focus, select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft) }
+.primary { background: var(--accent); color: var(--accent-fg); border: 0; border-radius: 8px; padding: 10px 14px; font-weight: 600 }
+.primary:hover { filter: brightness(1.08) }
+.errors { background: var(--bad-soft); color: var(--bad); border-radius: 8px; padding: 10px 12px; font-size: 14px; display: grid; gap: 2px }
+.right { display: grid; gap: 16px; min-width: 0 }
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px }
+table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 560px }
+th { text-align: left; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); background: var(--sunk); padding: 8px 10px; white-space: nowrap }
+td { padding: 8px 10px; border-top: 1px solid var(--line); vertical-align: top; font-variant-numeric: tabular-nums }
+td.act { white-space: nowrap; text-align: right }
+.mini { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px; font-size: 13px; margin-left: 4px }
+.mini:hover { border-color: var(--accent); color: var(--accent) }
+.mini.danger:hover { border-color: var(--bad); color: var(--bad) }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; background: var(--sunk); color: var(--muted) }
+.pill.ok { background: var(--ok-soft); color: var(--ok) }
+.pill.warn { background: var(--warn-soft); color: var(--warn) }
+.pill.bad { background: var(--bad-soft); color: var(--bad) }
+.pill.info { background: var(--accent-soft); color: var(--accent) }
+.spec ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px }
+.extra ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px }
+.foot { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; font-size: 13px; color: var(--muted) }
+.reset { background: none; border: 1px solid var(--line); border-radius: 7px; padding: 5px 10px; font-size: 13px; color: var(--muted) }
+.reset.armed { border-color: var(--bad); color: var(--bad) }
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-size: 14px; max-width: calc(100% - 32px); box-shadow: 0 6px 20px rgba(0,0,0,.25); z-index: 20 }
+.empty { padding: 18px; text-align: center; color: var(--muted) }
+@media (prefers-reduced-motion: no-preference) { .toast { animation: up .2s ease-out } @keyframes up { from { opacity: 0; transform: translate(-50%, 8px) } } }
+
+.big { font-size: 22px; font-weight: 600; margin: 0 }
+.left { display: grid; gap: 16px; min-width: 0 }
+.problem h3 { margin-bottom: 4px }
+.problem p { color: var(--fg); max-width: 90ch }
+.listhead { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between }
+.search { display: block; min-width: 0; flex: 0 1 240px }
+.search input { padding: 7px 10px }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0) }
+.count { font-size: 14px; font-weight: 400 }
+.rn { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 14px }
+.rn li { display: grid; grid-template-columns: 52px 1fr; gap: 8px; align-items: baseline }
+.rn .code { font: 600 12px var(--mono); color: var(--accent) }
+.extra ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px }
+.mini-t { border-collapse: collapse; width: 100%; min-width: 0; font-size: 13px }
+.mini-t th, .mini-t td { padding: 4px 6px; border-top: 1px solid var(--line); text-align: left; background: none; text-transform: none; letter-spacing: 0; font-size: 13px }
+.mini.armed { border-color: var(--bad); color: var(--bad) }
+.credit { margin-top: 24px; font-size: 13px; color: var(--muted) }
+.layout { grid-template-columns: minmax(0, 360px) minmax(0, 1fr) }
+@media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr) } }
+td.act { white-space: normal; min-width: 130px }
+td.act .mini { margin: 2px 0 2px 4px }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+// ---------- utilidades ----------
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pad = (n) => String(n).padStart(2, "0");
+const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const hoje = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
+const HOJE = () => iso(hoje());
+const parseD = (s) => { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, m - 1, d); };
+const addDias = (s, n) => { const d = parseD(s); d.setDate(d.getDate() + n); return iso(d); };
+const emDias = (n) => addDias(HOJE(), n);
+const dias = (a, b) => Math.round((parseD(b) - parseD(a)) / 864e5);
+const dow = (s) => parseD(s).getDay();
+const br = (s) => { if (!s) return ""; const [y, m, d] = s.split("-"); return `${d}/${m}/${y}`; };
+const brl = (n) => (isFinite(n) ? n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "");
+const num = (v) => (v === "" || v == null ? NaN : Number(v));
+const horas = (a, b, passo = 60) => { const r = []; for (let m = a * 60; m <= b * 60; m += passo) r.push(`${pad(Math.floor(m / 60))}:${pad(m % 60)}`); return r; };
+const hm = (s) => { const [h, m] = String(s).split(":").map(Number); return h * 60 + (m || 0); };
+const mesAtual = () => HOJE().slice(0, 7);
+const preco = (opts, nome) => (opts.find((o) => o[0] === nome) || [, 0])[1];
+const obrig = (r, campos) => campos.filter(([k]) => r[k] === "" || r[k] == null).map(([, l]) => `Preencha o campo ${l}.`);
+const soLetras = (v) => /^[A-Za-zÀ-ÿ' ]+$/.test(v);
+const nomeOk = (v, min = 3, max = 60) => v.length >= min && v.length <= max && soLetras(v);
+const telDig = (v) => String(v).replace(/\D/g, "").length;
+const telOk = (v) => /^[\d\s()+-]+$/.test(v) && [10, 11].includes(telDig(v));
+const proxDia = (n, ok = [1, 2, 3, 4, 5, 6]) => { let s = emDias(n); while (!ok.includes(dow(s))) s = addDias(s, 1); return s; };
+const agoraHM = () => { const d = new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const somaHoras = (t, h) => { const m = hm(t) + h * 60; return `${pad(Math.floor(m / 60) % 24)}:${pad(m % 60)}`; };
+const DSEM = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
+
+// ---------- dados de apoio ----------
+const PROD_PADARIA = [["Pão francês", 0.8], ["Pão doce", 1.5], ["Coxinha", 5], ["Bolo de milho", 25]];
+const SERV_BARB = [["Corte", 35], ["Barba", 25], ["Corte e barba", 55]];
+const LIVROS = [["Dom Casmurro", 2], ["O Cortiço", 1], ["Vidas Secas", 1], ["Capitães da Areia", 1], ["Memórias Póstumas de Brás Cubas", 1], ["A Hora da Estrela", 1]];
+const SERV_PET = [["Banho", 50], ["Banho e tosa", 80], ["Tosa higiênica", 40]];
+const PLANOS = [["Mensal", 90], ["Trimestral", 240], ["Anual", 840]];
+const BAIRROS_ENT = [["Centro", 5], ["Siqueira Campos", 6], ["Jardins", 8], ["Farolândia", 9], ["Atalaia", 10]];
+const MARMITAS = [["P", 18], ["M", 23], ["G", 27]];
+const BEBIDAS = [["Nenhuma", 0], ["Refrigerante lata", 6], ["Suco natural", 7]];
+const ARTESAOS = ["Dona Neide", "Seu Zé do Barro", "Maria das Rendas", "João Cestaria"];
+const SERV_LAV = [["Lavar", 4], ["Lavar e passar", 6]];
+const BIKES = [["Bike 01 comum", 10], ["Bike 02 comum", 10], ["Bike 03 comum", 10], ["Bike 04 elétrica", 25], ["Bike 05 elétrica", 25]];
+const LABS = [["Lab 101", 40], ["Lab 102", 40], ["Lab 201", 40], ["Lab 202", 30]];
+const PROC_DENT = [["Avaliação", 80], ["Limpeza", 150], ["Tratamento de canal", 600]];
+
+const CASOS = [
+// =============================== 01 PADARIA
+{
+  nome: "Padaria do bairro", entidade: "Encomenda", fem: true, regra: "De 1 a 50 unidades por encomenda",
+  contexto: "Dona Lúcia tem uma padaria no Siqueira Campos. As encomendas chegavam pelo WhatsApp, se perdiam e às vezes eram preparadas duas vezes. A padaria funciona de segunda a sábado das 06:00 às 19:00 e aos domingos das 06:00 às 12:00. Este sistema registra as encomendas, calcula o valor e mostra o que produzir para o dia seguinte.",
+  fields: [["cliente", "Cliente", "text"], ["telefone", "Telefone", "tel"], ["produto", "Produto", "select", PROD_PADARIA.map((p) => p[0])], ["quantidade", "Quantidade", "number"], ["retirada", "Data de retirada", "date"], ["horario", "Horário de retirada", "select", horas(6, 20)], ["obs", "Observação (opcional)", "text"]],
+  rn: [
+    "Cliente, telefone, produto, quantidade, data e horário de retirada são obrigatórios.",
+    "O nome do cliente tem de 3 a 60 caracteres, só letras e espaços.",
+    "O telefone tem DDD e 10 ou 11 dígitos.",
+    "Cada encomenda aceita de 1 a 50 unidades, sempre em número inteiro.",
+    "A data de retirada não pode ser anterior a hoje.",
+    "A retirada pode ser marcada para no máximo 30 dias à frente.",
+    "De segunda a sábado, a retirada é das 06:00 às 19:00.",
+    "Aos domingos, a retirada é das 06:00 às 12:00.",
+    "Valor = quantidade × preço. Pão francês R$ 0,80, pão doce R$ 1,50, coxinha R$ 5,00, bolo de milho R$ 25,00.",
+    "Encomendas acima de R$ 100,00 ganham 5% de desconto. Encomendas de R$ 100,00 ou menos não têm desconto.",
+    "Situação: Recebida → Em preparo → Pronta → Retirada, sem pular nenhuma etapa.",
+    "Só encomendas na situação Recebida podem ser canceladas.",
+    "Quando a encomenda fica Pronta, o aviso vai para o nome e o telefone do cliente daquela encomenda.",
+    "A lista mostra as encomendas pela data e hora de retirada, da mais próxima para a mais distante.",
+    "A busca encontra encomendas pelo nome do cliente, sem diferenciar maiúsculas de minúsculas.",
+    "O contador de registros não conta encomendas canceladas.",
+    "O painel Produção de amanhã soma as unidades por produto com retirada amanhã, sem contar canceladas.",
+    "A observação aceita até 100 caracteres.",
+    "Excluir uma encomenda pede confirmação.",
+  ],
+  statuses: ["Recebida", "Em preparo", "Pronta", "Retirada"], cancel: "Cancelada", cancelBtn: "Cancelar",
+  next: (r) => ({ "Recebida": "Pronta", "Em preparo": "Pronta", "Pronta": "Retirada" }[r.status]),
+  canCancel: (r) => !["Retirada", "Cancelada"].includes(r.status),
+  validate(r) {
+    const e = obrig(r, [["cliente", "Cliente"], ["telefone", "Telefone"], ["produto", "Produto"], ["quantidade", "Quantidade"], ["retirada", "Data de retirada"], ["horario", "Horário"]]);
+    if (r.cliente && (r.cliente.length < 3 || r.cliente.length > 60)) e.push("O nome do cliente deve ter de 3 a 60 caracteres.");
+    const q = num(r.quantidade);
+    if (r.quantidade !== "" && (q < 1 || q > 51)) e.push("A quantidade deve ficar entre 1 e 50 unidades.");
+    const h = Number(String(r.horario).slice(0, 2));
+    if (r.horario && (h < 6 || h > 20)) e.push("A retirada é das 06:00 às 19:00.");
+    if (r.obs && r.obs.length > 100) e.push("A observação aceita até 100 caracteres.");
+    return e;
+  },
+  total(r) { const t = num(r.quantidade) * preco(PROD_PADARIA, r.produto); return t >= 100 ? t * 0.95 : t; },
+  aviso: { "Pronta": (r, all) => `Aviso enviado para ${all[0].cliente} no telefone ${all[0].telefone}.` },
+  sort: (l) => l.slice().sort((a, b) => b.criado.localeCompare(a.criado)),
+  search: { keys: ["cliente"], sens: true },
+  count: (l) => l.filter((x) => x.status !== "Cancelada").length,
+  delConfirm: true,
+  panels(all) {
+    const am = emDias(1), t = {};
+    all.filter((x) => x.retirada === am).forEach((x) => (t[x.produto] = (t[x.produto] || 0) + num(x.quantidade)));
+    const k = Object.keys(t);
+    return [{ title: "Produção de amanhã", html: k.length ? `<ul>${k.map((p) => `<li>${esc(p)}: <span class="mono">${t[p]}</span> un.</li>`).join("")}</ul>` : `<p class="muted">Nada para amanhã.</p>` }];
+  },
+  cols: [["Cliente", (r) => esc(r.cliente)], ["Produto", (r) => esc(r.produto)], ["Qtd", (r) => r.quantidade], ["Retirada", (r) => `${br(r.retirada)} ${r.horario}`], ["Total", (r, c) => brl(c.total(r))], ["Situação", (r) => pill(r.status)]],
+  seed: () => [
+    { cliente: "Marta Souza", telefone: "79 99812-4410", produto: "Pão francês", quantidade: 20, retirada: emDias(1), horario: "07:00", status: "Recebida" },
+    { cliente: "Carlos Menezes", telefone: "79 99655-1032", produto: "Bolo de milho", quantidade: 2, retirada: emDias(2), horario: "16:00", status: "Recebida" },
+    { cliente: "Lia Prado", telefone: "79 99120-7781", produto: "Coxinha", quantidade: 30, retirada: emDias(0), horario: "17:00", status: "Em preparo" },
+    { cliente: "Edson Lima", telefone: "79 98877-2200", produto: "Pão doce", quantidade: 12, retirada: emDias(0), horario: "08:00", status: "Pronta" },
+    { cliente: "Rita Campos", telefone: "79 99301-5576", produto: "Coxinha", quantidade: 15, retirada: emDias(1), horario: "09:00", status: "Cancelada" },
+  ],
+},
+// =============================== 02 BARBEARIA
+{
+  nome: "Barbearia", entidade: "Agendamento", regra: "Agendamento com 1 a 30 dias de antecedência",
+  contexto: "Seu Jorge e Kaique atendem numa barbearia no Bairro Industrial. Os horários eram anotados num caderno e dois clientes chegavam para o mesmo horário. A barbearia abre de terça a sábado, das 08:00 às 18:00, e fecha para almoço das 12:00 às 13:30. Este sistema agenda atendimentos por barbeiro.",
+  fields: [["cliente", "Cliente", "text"], ["telefone", "Telefone", "tel"], ["barbeiro", "Barbeiro", "select", ["Seu Jorge", "Kaique"]], ["servico", "Serviço", "select", SERV_BARB.map((s) => s[0])], ["data", "Data", "date"], ["horario", "Horário", "select", horas(8, 19.5, 30)]],
+  rn: [
+    "Cliente, telefone, barbeiro, serviço, data e horário são obrigatórios.",
+    "O nome do cliente tem de 3 a 60 caracteres, só letras e espaços.",
+    "O telefone tem DDD e 10 ou 11 dígitos.",
+    "O agendamento é feito com 1 a 30 dias de antecedência. Não dá para agendar para hoje.",
+    "A barbearia abre de terça a sábado. Domingo e segunda não há atendimento.",
+    "O último horário de atendimento é 18:00.",
+    "Não há atendimento no almoço: 12:00, 12:30 e 13:00 ficam bloqueados.",
+    "Um barbeiro não atende dois clientes no mesmo horário. Barbeiros diferentes podem atender no mesmo horário.",
+    "Cancelar um agendamento libera o horário.",
+    "Corte e barba dura 1 hora e ocupa também o horário seguinte do mesmo barbeiro.",
+    "Cada cliente, identificado pelo telefone, pode ter no máximo 2 agendamentos ativos.",
+    "Preços: corte R$ 35, barba R$ 25, corte e barba R$ 55.",
+    "Situação: Agendado → Atendido. Só agendamentos na situação Agendado podem ser cancelados.",
+    "A lista mostra os agendamentos por data e, no mesmo dia, por horário.",
+    "A busca encontra agendamentos pelo nome do cliente, sem diferenciar maiúsculas de minúsculas.",
+    "O contador de registros não conta agendamentos cancelados.",
+    "O painel Faturamento previsto soma só os agendamentos na situação Agendado.",
+    "Excluir um agendamento pede confirmação.",
+  ],
+  statuses: ["Agendado", "Atendido"], cancel: "Cancelado", cancelBtn: "Cancelar",
+  canCancel: (r) => r.status !== "Cancelado",
+  validate(r, all) {
+    const e = obrig(r, [["cliente", "Cliente"], ["telefone", "Telefone"], ["barbeiro", "Barbeiro"], ["servico", "Serviço"], ["data", "Data"], ["horario", "Horário"]]);
+    if (r.cliente && (!soLetras(r.cliente) || r.cliente.length > 60)) e.push("O nome do cliente deve ter só letras, com até 60 caracteres.");
+    if (r.data) {
+      const d = dias(HOJE(), r.data);
+      if (d < 0 || d >= 30) e.push("Agende com 1 a 30 dias de antecedência.");
+      if (dow(r.data) === 0) e.push("A barbearia não abre aos domingos.");
+    }
+    if (["12:00", "12:30"].includes(r.horario)) e.push("Não há atendimento no horário de almoço.");
+    if (r.data && r.horario && all.some((x) => x.barbeiro === r.barbeiro && x.data === r.data && x.horario === r.horario)) e.push(`${r.barbeiro} já tem cliente nesse horário.`);
+    return e;
+  },
+  sort: (l) => l.slice().sort((a, b) => a.data.localeCompare(b.data)),
+  search: { keys: ["cliente"], sens: true },
+  count: (l) => l.length,
+  delConfirm: true,
+  panels(all) {
+    const t = all.filter((x) => x.status !== "Atendido").reduce((s, x) => s + preco(SERV_BARB, x.servico), 0);
+    return [{ title: "Faturamento previsto", html: `<p class="big mono">${brl(t)}</p>` }];
+  },
+  cols: [["Cliente", (r) => esc(r.cliente)], ["Barbeiro", (r) => esc(r.barbeiro)], ["Serviço", (r) => esc(r.servico)], ["Data", (r) => `${br(r.data)} <span class="muted">${DSEM[dow(r.data)].slice(0, 3)}</span>`], ["Horário", (r) => `<span class="mono">${r.horario}</span>`], ["Valor", (r) => brl(preco(SERV_BARB, r.servico))], ["Situação", (r) => pill(r.status)]],
+  seed: () => {
+    const d1 = proxDia(1, [2, 3, 4, 5, 6]), d2 = proxDia(4, [2, 3, 4, 5, 6]);
+    return [
+      { cliente: "Rafael Nunes", telefone: "79 99901-3321", barbeiro: "Seu Jorge", servico: "Corte", data: d1, horario: "09:00", status: "Agendado" },
+      { cliente: "Bruno Teles", telefone: "79 99822-1188", barbeiro: "Kaique", servico: "Corte e barba", data: d1, horario: "09:00", status: "Agendado" },
+      { cliente: "Igor Santana", telefone: "79 99734-5520", barbeiro: "Seu Jorge", servico: "Barba", data: d2, horario: "17:30", status: "Agendado" },
+      { cliente: "Lucas Prata", telefone: "79 99610-0452", barbeiro: "Seu Jorge", servico: "Corte", data: d2, horario: "10:00", status: "Cancelado" },
+      { cliente: "Davi Alves", telefone: "79 98101-4471", barbeiro: "Kaique", servico: "Corte", data: emDias(-3), horario: "14:00", status: "Atendido" },
+    ];
+  },
+},
+// =============================== 03 BIBLIOTECA
+{
+  nome: "Biblioteca escolar", entidade: "Empréstimo", regra: "Até 3 livros por aluno, prazo de 1 a 14 dias",
+  contexto: "A biblioteca de uma escola estadual em Aracaju controlava empréstimos em fichas de papel. Ninguém sabia quem estava com cada livro nem quanto cada aluno devia de multa. O acervo tem 2 exemplares de Dom Casmurro e 1 exemplar dos outros títulos. A biblioteca não abre aos domingos.",
+  fields: [["aluno", "Aluno", "text"], ["matricula", "Matrícula", "text"], ["turma", "Turma", "select", ["6º A", "7º A", "8º A", "9º A", "9º B"]], ["livro", "Livro", "select", LIVROS.map((l) => l[0])], ["emprestimo", "Data do empréstimo", "date", null, () => HOJE()], ["prazo", "Prazo em dias", "number", null, () => 7]],
+  rn: [
+    "Aluno, matrícula, turma, livro, data do empréstimo e prazo são obrigatórios.",
+    "O nome do aluno tem de 3 a 60 caracteres, só letras e espaços.",
+    "A matrícula tem exatamente 7 dígitos numéricos.",
+    "A data do empréstimo é sempre a de hoje. Não aceita data passada nem futura.",
+    "O prazo de devolução vai de 1 a 14 dias.",
+    "Cada aluno pode ter no máximo 3 livros emprestados ao mesmo tempo.",
+    "Aluno com livro atrasado não pode pegar outro livro até devolver.",
+    "Cada título pode ser emprestado até o número de exemplares: Dom Casmurro tem 2, os demais têm 1.",
+    "Devolver até = data do empréstimo + prazo. Se cair num domingo, passa para segunda.",
+    "Um empréstimo fica Atrasado quando hoje passou da data de devolução.",
+    "Multa de R$ 0,50 por dia de atraso.",
+    "Renovar soma 7 dias ao prazo. Cada empréstimo pode ser renovado uma única vez.",
+    "Empréstimo atrasado não pode ser renovado.",
+    "A lista mostra primeiro os atrasados e depois os demais por data de devolução.",
+    "A busca encontra pelo nome ou pela matrícula, sem diferenciar maiúsculas de minúsculas.",
+    "O painel Exemplares disponíveis mostra quantos exemplares de cada título estão na estante.",
+    "Excluir um empréstimo pede confirmação.",
+  ],
+  statuses: ["Emprestado", "Devolvido"],
+  validate(r, all) {
+    const e = obrig(r, [["aluno", "Aluno"], ["matricula", "Matrícula"], ["turma", "Turma"], ["livro", "Livro"], ["emprestimo", "Data do empréstimo"], ["prazo", "Prazo"]]);
+    if (r.aluno && (r.aluno.length < 3 || r.aluno.length > 60)) e.push("O nome do aluno deve ter de 3 a 60 caracteres.");
+    if (r.emprestimo && dias(r.emprestimo, HOJE()) > 0) e.push("A data do empréstimo não pode ser anterior a hoje.");
+    if (r.prazo !== "" && num(r.prazo) > 14) e.push("O prazo máximo é de 14 dias.");
+    const ativos = all.filter((x) => x.matricula === r.matricula && x.status === "Emprestado").length;
+    if (r.matricula && ativos > 3) e.push("Este aluno já tem 3 livros emprestados.");
+    if (r.livro && all.some((x) => x.livro === r.livro && x.status === "Emprestado")) e.push(`Não há exemplar disponível de ${r.livro}.`);
+    return e;
+  },
+  devolucao: (r) => addDias(r.emprestimo, num(r.prazo) + (r.renov || 0) * 7),
+  atraso(r, c) { return r.status === "Emprestado" ? Math.max(0, dias(c.devolucao(r), HOJE())) : 0; },
+  situacao(r, c) { return c.atraso(r, c) > 0 ? "Atrasado" : r.status; },
+  actions: [{ label: "Renovar", show: (r) => r.status === "Emprestado", run: (r) => { r.renov = (r.renov || 0) + 1; return "Empréstimo renovado por mais 7 dias."; } }],
+  sort(l, c) { return l.slice().sort((a, b) => c.devolucao(a).localeCompare(c.devolucao(b))); },
+  search: { keys: ["aluno"], sens: false },
+  count: (l) => l.length,
+  delConfirm: false,
+  panels(all) {
+    return [{ title: "Exemplares disponíveis", html: `<ul>${LIVROS.map(([t, n]) => `<li>${esc(t)}: <span class="mono">${Math.max(0, n - all.filter((x) => x.livro === t).length)}</span> de ${n}</li>`).join("")}</ul>` }];
+  },
+  cols: [["Aluno", (r) => esc(r.aluno)], ["Matrícula", (r) => `<span class="mono">${esc(r.matricula)}</span>`], ["Livro", (r) => esc(r.livro)], ["Devolver até", (r, c) => br(c.devolucao(r))], ["Multa", (r, c) => brl(Math.max(0, c.atraso(r, c) - 1) * 0.5)], ["Situação", (r, c) => pill(c.situacao(r, c))]],
+  seed: () => [
+    { aluno: "Ana Clara Reis", matricula: "2026101", turma: "8º A", livro: "Vidas Secas", emprestimo: emDias(-3), prazo: 10, status: "Emprestado" },
+    { aluno: "Ana Clara Reis", matricula: "2026101", turma: "8º A", livro: "O Cortiço", emprestimo: emDias(-1), prazo: 14, status: "Emprestado" },
+    { aluno: "Pedro Henrique Lima", matricula: "2026144", turma: "9º A", livro: "Dom Casmurro", emprestimo: emDias(-12), prazo: 7, status: "Emprestado" },
+    { aluno: "Júlia Matos", matricula: "2026150", turma: "7º A", livro: "A Hora da Estrela", emprestimo: emDias(-20), prazo: 10, status: "Devolvido" },
+  ],
+},
+// =============================== 04 PET SHOP
+{
+  nome: "Pet shop de banho e tosa", entidade: "Atendimento", regra: "Pets de 1 a 40 kg",
+  contexto: "Um pet shop na Farolândia atende cães e gatos de segunda a sábado, das 08:00 às 16:00. São 4 boxes, então cabem 4 pets por horário. A atendente esquecia de avisar quando o pet ficava pronto. Este sistema agenda os atendimentos, calcula o preço pelo peso e avisa o tutor.",
+  fields: [["tutor", "Tutor", "text"], ["telefone", "Telefone", "tel"], ["pet", "Nome do pet", "text"], ["especie", "Espécie", "select", ["Cão", "Gato"]], ["peso", "Peso em kg", "number", null, null, "0.1"], ["servico", "Serviço", "select", SERV_PET.map((s) => s[0])], ["data", "Data", "date"], ["horario", "Horário", "select", horas(8, 17)]],
+  rn: [
+    "Tutor, telefone, nome do pet, espécie, peso, serviço, data e horário são obrigatórios.",
+    "O nome do tutor tem de 3 a 60 caracteres, só letras e espaços.",
+    "O nome do pet tem de 2 a 30 caracteres.",
+    "O telefone tem DDD e 10 ou 11 dígitos.",
+    "O pet pesa de 1 a 40 kg, com no máximo uma casa decimal.",
+    "Gatos fazem só Banho. Gato não pode ser agendado para Banho e tosa nem para Tosa higiênica.",
+    "Preço base: banho R$ 50, banho e tosa R$ 80, tosa higiênica R$ 40.",
+    "Acima de 10 kg até 25 kg, acréscimo de R$ 20. Acima de 25 kg, acréscimo de R$ 40. Pet com 10 kg ou menos não tem acréscimo.",
+    "Gatos têm acréscimo de R$ 15 pelo manejo.",
+    "A data não pode ser anterior a hoje e não pode ser domingo.",
+    "O último horário de atendimento é 16:00.",
+    "Cabem no máximo 4 atendimentos no mesmo dia e horário.",
+    "Situação: Agendado → No banho → Pronto → Entregue. Só agendamentos na situação Agendado podem ser cancelados.",
+    "Quando o pet fica Pronto, o aviso diz o nome do pet.",
+    "A lista mostra os atendimentos por data e horário.",
+    "A busca encontra pelo nome do tutor ou do pet, sem diferenciar maiúsculas de minúsculas.",
+    "O painel Faturamento de hoje soma só os atendimentos de hoje na situação Entregue.",
+    "O contador de registros não conta atendimentos cancelados.",
+    "Excluir um atendimento pede confirmação.",
+  ],
+  statuses: ["Agendado", "No banho", "Pronto", "Entregue"], cancel: "Cancelado", cancelBtn: "Cancelar",
+  canCancel: (r) => ["Agendado", "No banho"].includes(r.status),
+  validate(r) {
+    const e = obrig(r, [["tutor", "Tutor"], ["telefone", "Telefone"], ["pet", "Nome do pet"], ["especie", "Espécie"], ["peso", "Peso"], ["servico", "Serviço"], ["data", "Data"], ["horario", "Horário"]]);
+    if (r.tutor && !nomeOk(r.tutor)) e.push("O nome do tutor deve ter de 3 a 60 letras.");
+    if (r.pet && r.pet.length > 30) e.push("O nome do pet aceita até 30 caracteres.");
+    const w = num(r.peso);
+    if (r.peso !== "" && (w < 0 || w > 40)) e.push("O peso deve ficar entre 1 e 40 kg.");
+    if (r.peso !== "" && Math.abs(w * 10 - Math.round(w * 10)) > 1e-9) e.push("Informe o peso com no máximo uma casa decimal.");
+    if (r.especie === "Gato" && r.servico === "Tosa higiênica") e.push("Gatos fazem só banho.");
+    if (r.horario && Number(r.horario.slice(0, 2)) > 17) e.push("O último horário é 16:00.");
+    return e;
+  },
+  valor(r) { const w = num(r.peso); let v = preco(SERV_PET, r.servico); if (w > 25) v += 40; else if (w >= 10) v += 20; return v; },
+  aviso: { "Pronto": (r) => `Aviso enviado para ${r.tutor}: ${r.tutor} está pronto para buscar.` },
+  sort: (l) => l.slice().sort((a, b) => (a.data + a.horario).localeCompare(b.data + b.horario)),
+  search: { keys: ["tutor"], sens: false },
+  count: (l) => l.length,
+  delConfirm: true,
+  panels(all, c) {
+    const t = all.filter((x) => x.data === HOJE()).reduce((s, x) => s + c.valor(x), 0);
+    return [{ title: "Faturamento de hoje", html: `<p class="big mono">${brl(t)}</p>` }];
+  },
+  cols: [["Tutor", (r) => esc(r.tutor)], ["Pet", (r) => `${esc(r.pet)} <span class="muted">${esc(r.especie)}</span>`], ["Peso", (r) => `${String(r.peso).replace(".", ",")} kg`], ["Serviço", (r) => esc(r.servico)], ["Data", (r) => `${br(r.data)} ${r.horario}`], ["Valor", (r, c) => brl(c.valor(r))], ["Situação", (r) => pill(r.status)]],
+  seed: () => {
+    const d = proxDia(1);
+    return [
+      { tutor: "Renata Lopes", telefone: "79 99644-0921", pet: "Pipoca", especie: "Cão", peso: 6.5, servico: "Banho", data: HOJE(), horario: "09:00", status: "Entregue" },
+      { tutor: "Márcio Dantas", telefone: "79 99877-3145", pet: "Thor", especie: "Cão", peso: 32, servico: "Banho e tosa", data: HOJE(), horario: "10:00", status: "No banho" },
+      { tutor: "Sônia Freitas", telefone: "79 99102-6608", pet: "Mel", especie: "Cão", peso: 18, servico: "Banho", data: d, horario: "08:00", status: "Agendado" },
+      { tutor: "Gustavo Reis", telefone: "79 99230-8814", pet: "Frajola", especie: "Gato", peso: 4.2, servico: "Banho", data: d, horario: "08:00", status: "Agendado" },
+    ];
+  },
+},
+// =============================== 05 ACADEMIA
+{
+  nome: "Academia de bairro", entidade: "Aluno", regra: "Alunos de 16 a 70 anos",
+  contexto: "Uma academia pequena no Santos Dumont controlava mensalidades num caderno e não sabia quem estava em atraso. Ela oferece musculação, funcional ou as duas modalidades juntas, em planos mensal, trimestral e anual. Este sistema cadastra alunos, calcula a mensalidade e registra pagamentos.",
+  fields: [["aluno", "Aluno", "text"], ["idade", "Idade", "number"], ["telefone", "Telefone", "tel"], ["plano", "Plano", "select", PLANOS.map((p) => p[0])], ["modalidade", "Modalidade", "select", ["Musculação", "Funcional", "Musculação + Funcional"]], ["vencimento", "Dia do vencimento", "number"]],
+  rn: [
+    "Aluno, idade, telefone, plano, modalidade e dia do vencimento são obrigatórios.",
+    "O nome do aluno tem de 3 a 60 caracteres, só letras e espaços.",
+    "O telefone tem DDD e 10 ou 11 dígitos.",
+    "Dois alunos não podem ter o mesmo telefone.",
+    "A academia aceita alunos de 16 a 70 anos.",
+    "O dia do vencimento vai de 1 a 28.",
+    "Valor por mês: Mensal R$ 90. Trimestral R$ 240 dividido em 3 meses. Anual R$ 840 dividido em 12 meses.",
+    "A modalidade Musculação + Funcional soma R$ 30 por mês em qualquer plano.",
+    "Alunos de 60 anos ou mais têm 20% de desconto no valor por mês.",
+    "Pagamento: Pendente → Pago. Nova mensalidade volta para Pendente.",
+    "O aluno fica Em atraso quando o pagamento está pendente e hoje já passou do dia do vencimento. No próprio dia do vencimento ainda não está em atraso.",
+    "Mensalidade em atraso tem multa de 2% sobre o valor por mês.",
+    "Trancar a matrícula deixa o aluno como Trancado. Aluno trancado não gera cobrança e não aparece como em atraso.",
+    "A lista mostra os alunos em ordem alfabética.",
+    "A busca encontra pelo nome, sem diferenciar maiúsculas de minúsculas.",
+    "O painel A receber soma só as mensalidades pendentes de alunos não trancados.",
+    "O contador de registros não conta alunos trancados.",
+    "Excluir um aluno pede confirmação.",
+  ],
+  statuses: [],
+  validate(r) {
+    const e = obrig(r, [["aluno", "Aluno"], ["idade", "Idade"], ["telefone", "Telefone"], ["plano", "Plano"], ["modalidade", "Modalidade"], ["vencimento", "Dia do vencimento"]]);
+    if (r.aluno && (r.aluno.length < 3 || !soLetras(r.aluno))) e.push("O nome do aluno deve ter pelo menos 3 letras.");
+    if (r.telefone && !telOk(r.telefone)) e.push("Informe o telefone com DDD, 10 ou 11 dígitos.");
+    const i = num(r.idade), d = num(r.vencimento);
+    if (r.idade !== "" && (i < 15 || i > 69)) e.push("A academia aceita alunos de 16 a 70 anos.");
+    if (r.vencimento !== "" && (d < 0 || d > 28)) e.push("O dia do vencimento deve ficar entre 1 e 28.");
+    return e;
+  },
+  novo: (r) => ({ ...r, status: "Pendente" }),
+  porMes(r) {
+    let v = r.plano === "Mensal" ? 90 : r.plano === "Trimestral" ? 240 / 4 : 840 / 12;
+    if (r.modalidade === "Musculação + Funcional" && r.plano !== "Anual") v += 30;
+    if (num(r.idade) > 60) v *= 0.8;
+    return v;
+  },
+  atrasado: (r) => r.status === "Pendente" && hoje().getDate() >= num(r.vencimento),
+  situacao(r, c) { return c.atrasado(r) ? "Em atraso" : r.status; },
+  aPagar(r, c) { if (r.status === "Pago" || r.status === "Trancado") return 0; return c.atrasado(r) ? c.porMes(r) * 1.2 : c.porMes(r); },
+  actions: [
+    { label: "Registrar pagamento", show: (r) => r.status === "Pendente", run: (r) => { r.status = "Pago"; return "Pagamento registrado."; } },
+    { label: "Nova mensalidade", show: (r) => r.status === "Pago", run: (r) => { r.status = "Pendente"; return "Nova mensalidade gerada."; } },
+    { label: "Trancar", show: (r) => r.status !== "Trancado", run: (r) => { r.status = "Trancado"; return "Matrícula trancada."; } },
+    { label: "Reativar", show: (r) => r.status === "Trancado", run: (r) => { r.status = "Pendente"; return "Matrícula reativada."; } },
+  ],
+  sort: (l) => l.slice(),
+  search: { keys: ["aluno"], sens: true },
+  count: (l) => l.length,
+  delConfirm: true,
+  panels(all, c) {
+    const atr = all.filter((x) => x.status !== "Pago" && hoje().getDate() >= num(x.vencimento));
+    const tot = all.reduce((s, x) => s + c.porMes(x), 0);
+    return [
+      { title: "Alunos em atraso", html: atr.length ? `<ul>${atr.map((x) => `<li>${esc(x.aluno)}, vence dia ${x.vencimento}</li>`).join("")}</ul>` : `<p class="muted">Ninguém em atraso.</p>` },
+      { title: "A receber", html: `<p class="big mono">${brl(tot)}</p>` },
+    ];
+  },
+  cols: [["Aluno", (r) => esc(r.aluno)], ["Idade", (r) => r.idade], ["Plano", (r) => `${esc(r.plano)}<br><span class="muted">${esc(r.modalidade)}</span>`], ["Por mês", (r, c) => brl(c.porMes(r))], ["Vence dia", (r) => r.vencimento], ["A pagar", (r, c) => brl(c.aPagar(r, c))], ["Situação", (r, c) => pill(c.situacao(r, c))]],
+  seed: () => [
+    { aluno: "Thiago Bastos", idade: 24, telefone: "79 99610-2231", plano: "Mensal", modalidade: "Musculação", vencimento: 5, status: "Pago" },
+    { aluno: "Fernanda Leite", idade: 41, telefone: "79 99720-8812", plano: "Trimestral", modalidade: "Funcional", vencimento: 10, status: "Pendente" },
+    { aluno: "Antônio Batista", idade: 66, telefone: "79 99812-0044", plano: "Anual", modalidade: "Musculação + Funcional", vencimento: 1, status: "Pendente" },
+    { aluno: "Cláudia Moreira", idade: 35, telefone: "79 99431-7720", plano: "Mensal", modalidade: "Musculação", vencimento: 2, status: "Trancado" },
+  ],
+},
+// =============================== 06 OFICINA
+{
+  nome: "Oficina mecânica", entidade: "Orçamento", regra: "Desconto de 0% a 15% no orçamento",
+  contexto: "Seu Gilberto tem uma oficina no Bairro América. Os orçamentos eram escritos à mão e o cliente não sabia em que etapa estava o conserto. A oficina dá garantia de 90 dias nos serviços entregues. Este sistema registra orçamentos, acompanha cada carro e calcula a garantia.",
+  fields: [["cliente", "Cliente", "text"], ["telefone", "Telefone", "tel"], ["placa", "Placa", "text"], ["modelo", "Modelo do carro", "text"], ["ano", "Ano do carro", "number"], ["servico", "Serviço", "text"], ["pecas", "Valor das peças (R$)", "number", null, null, "0.01"], ["mao", "Mão de obra (R$)", "number", null, null, "0.01"], ["desconto", "Desconto (%)", "number", null, () => 0]],
+  rn: [
+    "Todos os campos são obrigatórios.",
+    "O nome do cliente tem de 3 a 60 caracteres, só letras e espaços.",
+    "O telefone tem DDD e 10 ou 11 dígitos.",
+    "A placa pode estar no padrão Mercosul (ABC1D23) ou no padrão antigo (ABC-1234).",
+    "A placa é aceita em letras maiúsculas ou minúsculas e é gravada em maiúsculas.",
+    "O ano do carro vai de 1980 até o ano que vem.",
+    "O valor das peças não pode ser negativo. Pode ser zero quando o serviço não usa peças.",
+    "A mão de obra é maior que zero.",
+    "O desconto vai de 0% a 15%.",
+    "Desconto acima de 10% só vale para orçamento acima de R$ 1.000,00.",
+    "Total = peças + mão de obra, com o desconto aplicado sobre esse total.",
+    "Situação: Orçamento → Aprovado → Em conserto → Pronto → Entregue. Só orçamentos na situação Orçamento podem ser recusados.",
+    "Não dá para abrir novo orçamento para uma placa que já tem serviço Aprovado, Em conserto ou Pronto.",
+    "A garantia vale 90 dias a partir da data de entrega.",
+    "A lista mostra os orçamentos mais recentes primeiro.",
+    "A busca encontra pelo nome do cliente ou pela placa, sem diferenciar maiúsculas de minúsculas.",
+    "O painel Carros na oficina mostra só os carros Aprovados, Em conserto ou Prontos.",
+    "Excluir um orçamento pede confirmação.",
+  ],
+  statuses: ["Orçamento", "Aprovado", "Em conserto", "Pronto", "Entregue"], cancel: "Recusado", cancelBtn: "Recusar",
+  canCancel: (r) => ["Orçamento", "Aprovado"].includes(r.status),
+  onStatus: (r) => { if (r.status === "Entregue") r.entregue = HOJE(); },
+  validate(r) {
+    const e = obrig(r, [["cliente", "Cliente"], ["telefone", "Telefone"], ["placa", "Placa"], ["modelo", "Modelo"], ["ano", "Ano"], ["servico", "Serviço"], ["pecas", "Peças"], ["mao", "Mão de obra"], ["desconto", "Desconto"]]);
+    if (r.cliente && !nomeOk(r.cliente)) e.push("O nome do cliente deve ter de 3 a 60 letras.");
+    if (r.placa && !/^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/.test(r.placa.replace(/\s/g, ""))) e.push("Placa inválida. Use o padrão ABC1D23.");
+    if (r.ano !== "" && num(r.ano) < 1980) e.push("O ano do carro deve ser a partir de 1980.");
+    if (r.mao !== "" && num(r.mao) < 0) e.push("A mão de obra não pode ser negativa.");
+    const d = num(r.desconto);
+    if (r.desconto !== "" && (d < 0 || d >= 15)) e.push("O desconto deve ficar entre 0% e 15%.");
+    return e;
+  },
+  novo: (r) => ({ ...r, placa: String(r.placa).replace(/\s/g, "").toUpperCase() }),
+  total: (r) => num(r.pecas) + num(r.mao) * (1 - num(r.desconto) / 100),
+  garantia: (r) => (r.entregue ? addDias(r.entregue, 30) : ""),
+  aviso: { "Pronto": (r) => `Aviso enviado para ${r.cliente}: ${r.modelo} placa ${r.placa} está pronto.` },
+  sort: (l) => l.slice().sort((a, b) => a.criado.localeCompare(b.criado)),
+  search: { keys: ["cliente", "placa"], sens: true },
+  count: (l) => l.filter((x) => x.status !== "Recusado").length,
+  delConfirm: true,
+  panels(all) {
+    const na = all.filter((x) => ["Aprovado", "Em conserto", "Pronto", "Entregue"].includes(x.status));
+    return [{ title: "Carros na oficina", html: na.length ? `<ul>${na.map((x) => `<li><span class="mono">${esc(x.placa)}</span> ${esc(x.modelo)}, ${esc(x.status.toLowerCase())}</li>`).join("")}</ul>` : `<p class="muted">Nenhum carro na oficina.</p>` }];
+  },
+  cols: [["Cliente", (r) => esc(r.cliente)], ["Carro", (r) => `${esc(r.modelo)} ${r.ano}<br><span class="mono muted">${esc(r.placa)}</span>`], ["Serviço", (r) => esc(r.servico)], ["Desc.", (r) => `${r.desconto}%`], ["Total", (r, c) => brl(c.total(r))], ["Garantia até", (r, c) => br(c.garantia(r))], ["Situação", (r) => pill(r.status)]],
+  seed: () => [
+    { cliente: "Gilberto Sá", telefone: "79 99631-9011", placa: "QKT2B41", modelo: "Gol", ano: 2015, servico: "Troca de pastilhas", pecas: 180, mao: 120, desconto: 0, status: "Em conserto" },
+    { cliente: "Patrícia Moura", telefone: "79 99920-4417", placa: "RIO5C77", modelo: "Onix", ano: 2020, servico: "Revisão de 40 mil km", pecas: 450, mao: 250, desconto: 10, status: "Orçamento" },
+    { cliente: "Wesley Andrade", telefone: "79 99113-2290", placa: "NVB-4410", modelo: "Uno", ano: 2009, servico: "Troca de embreagem", pecas: 620, mao: 380, desconto: 5, status: "Entregue", entregue: emDias(-5) },
+  ],
+},
+// =============================== 07 CONSULTÓRIO
+{
+  nome: "Consultório odontológico", entidade: "Consulta", fem: true, regra: "Consultas com início entre 7h e 18h",
+  contexto: "Um consultório com dois dentistas no Centro marcava consultas numa agenda de papel e os pacientes faltavam sem avisar. O consultório abre de segunda a sexta das 07:00 às 18:30 e aos sábados até 12:00. A Dra. Ana não atende às quartas. Este sistema agenda consultas, calcula quanto o paciente paga e prepara lembretes.",
+  fields: [["paciente", "Paciente", "text"], ["telefone", "Telefone", "tel"], ["dentista", "Dentista", "select", ["Dra. Ana Rocha", "Dr. Paulo Menezes"]], ["procedimento", "Procedimento", "select", PROC_DENT.map((p) => p[0])], ["convenio", "Convênio", "select", ["Particular", "OdontoPrev", "Amil Dental"]], ["data", "Data", "date"], ["hora", "Hora de início", "time"]],
+  rn: [
+    "Paciente, telefone, dentista, procedimento, convênio, data e hora são obrigatórios.",
+    "O nome do paciente tem de 3 a 60 caracteres, só letras e espaços.",
+    "O telefone tem DDD e 10 ou 11 dígitos.",
+    "As consultas começam entre 07:00 e 18:00.",
+    "As consultas começam em horários cheios ou meias horas, como 09:00 ou 09:30.",
+    "Não há atendimento aos domingos.",
+    "Aos sábados, a última consulta começa às 11:30.",
+    "A data não pode ser anterior a hoje nem passar de 60 dias à frente.",
+    "Tratamento de canal dura 60 minutos. Os demais procedimentos duram 30 minutos.",
+    "Um dentista não atende duas consultas com horários sobrepostos.",
+    "A Dra. Ana Rocha não atende às quartas-feiras.",
+    "Um paciente, identificado pelo telefone, não pode ter duas consultas no mesmo dia.",
+    "Preços: avaliação R$ 80, limpeza R$ 150, tratamento de canal R$ 600. Com convênio, o paciente não paga avaliação nem limpeza e paga 50% do canal.",
+    "O painel Lembretes de amanhã lista as consultas do dia seguinte.",
+    "Situação: Agendada → Confirmada → Atendida. A recepção marca Faltou só em consultas Agendadas ou Confirmadas.",
+    "Paciente com 2 faltas ou mais aparece com a marca Faltoso.",
+    "A lista mostra as consultas por data e hora.",
+    "A busca encontra pelo nome do paciente, sem diferenciar maiúsculas de minúsculas.",
+    "Excluir uma consulta pede confirmação.",
+  ],
+  statuses: ["Agendada", "Confirmada", "Atendida"], cancel: "Faltou", cancelBtn: "Faltou",
+  canCancel: (r) => r.status !== "Faltou",
+  validate(r, all) {
+    const e = obrig(r, [["paciente", "Paciente"], ["telefone", "Telefone"], ["dentista", "Dentista"], ["procedimento", "Procedimento"], ["convenio", "Convênio"], ["data", "Data"], ["hora", "Hora"]]);
+    if (r.paciente && !nomeOk(r.paciente)) e.push("O nome do paciente deve ter de 3 a 60 letras.");
+    if (r.telefone && !(/^[\d\s()+-]+$/.test(r.telefone) && telDig(r.telefone) >= 8)) e.push("Telefone inválido.");
+    if (r.hora) { const h = Number(r.hora.split(":")[0]); if (h < 7 || h > 18) e.push("As consultas começam entre 07:00 e 18:00."); }
+    if (r.data && dias(HOJE(), r.data) < 0) e.push("A data não pode ser anterior a hoje.");
+    if (r.data && r.hora && all.some((x) => x.dentista === r.dentista && x.data === r.data && x.hora === r.hora && x.status !== "Faltou")) e.push(`${r.dentista} já tem consulta nesse horário.`);
+    return e;
+  },
+  paga(r) {
+    const v = preco(PROC_DENT, r.procedimento);
+    if (r.convenio === "Particular") return v;
+    return r.procedimento === "Avaliação" ? 0 : v * 0.5;
+  },
+  faltoso: (r, all) => all.filter((x) => x.telefone === r.telefone && x.status === "Faltou").length >= 1,
+  sort: (l) => l.slice().sort((a, b) => a.hora.localeCompare(b.hora)),
+  search: { keys: ["paciente"], sens: true },
+  count: (l) => l.filter((x) => x.status !== "Faltou").length,
+  delConfirm: true,
+  panels(all) {
+    const lista = all.filter((x) => x.data === HOJE() && x.status !== "Faltou").sort((a, b) => a.hora.localeCompare(b.hora));
+    return [{ title: "Lembretes de amanhã", html: lista.length ? `<ul>${lista.map((x) => `<li><span class="mono">${x.hora}</span> ${esc(x.paciente)}, ${esc(x.telefone)}</li>`).join("")}</ul>` : `<p class="muted">Nenhuma consulta para lembrar.</p>` }];
+  },
+  cols: [["Paciente", (r, c, all) => `${esc(r.paciente)}${c.faltoso(r, all) ? ' <span class="pill bad">Faltoso</span>' : ""}`], ["Dentista", (r) => esc(r.dentista)], ["Procedimento", (r) => `${esc(r.procedimento)}<br><span class="muted">${esc(r.convenio)}</span>`], ["Data", (r) => `${br(r.data)} <span class="mono">${r.hora}</span>`], ["Paciente paga", (r, c) => brl(c.paga(r))], ["Situação", (r) => pill(r.status)]],
+  seed: () => {
+    const d1 = proxDia(1, [1, 2, 4, 5]), d2 = proxDia(3, [1, 2, 4, 5]);
+    return [
+      { paciente: "Luana Prado", telefone: "79 99401-7720", dentista: "Dra. Ana Rocha", procedimento: "Limpeza", convenio: "Particular", data: d1, hora: "15:00", status: "Confirmada" },
+      { paciente: "Roberto Cunha", telefone: "79 99582-1490", dentista: "Dr. Paulo Menezes", procedimento: "Tratamento de canal", convenio: "OdontoPrev", data: d1, hora: "08:30", status: "Agendada" },
+      { paciente: "Helena Vieira", telefone: "79 99613-5051", dentista: "Dra. Ana Rocha", procedimento: "Avaliação", convenio: "Amil Dental", data: d2, hora: "10:00", status: "Agendada" },
+      { paciente: "Roberto Cunha", telefone: "79 99582-1490", dentista: "Dr. Paulo Menezes", procedimento: "Avaliação", convenio: "OdontoPrev", data: emDias(-10), hora: "09:00", status: "Faltou" },
+    ];
+  },
+},
+// =============================== 08 MARMITARIA
+{
+  nome: "Marmitaria com entrega", entidade: "Pedido", regra: "Pedido de R$ 15 a R$ 300",
+  contexto: "A marmitaria da Dona Cida, no Centro, recebia pedidos por mensagem e o entregador não sabia a ordem das entregas. A cozinha prepara no máximo 10 marmitas por pedido. Este sistema recebe pedidos, calcula o valor com bebidas e taxa de entrega e organiza a fila do entregador.",
+  fields: [["cliente", "Cliente", "text"], ["telefone", "Telefone", "tel"], ["endereco", "Endereço com número", "text"], ["bairro", "Bairro", "select", BAIRROS_ENT.map((b) => b[0])], ["tamanho", "Marmita", "select", MARMITAS.map((m) => m[0])], ["quantidade", "Quantidade de marmitas", "number"], ["bebida", "Bebida", "select", BEBIDAS.map((b) => b[0])], ["qtdbeb", "Quantidade de bebidas", "number", null, () => 0], ["pagamento", "Pagamento", "select", ["Pix", "Cartão", "Dinheiro"]], ["troco", "Troco para (se dinheiro)", "number", null, null, "0.01"]],
+  rn: [
+    "Cliente, telefone, endereço, bairro, marmita, quantidade e forma de pagamento são obrigatórios.",
+    "O nome do cliente tem de 3 a 60 caracteres, só letras e espaços.",
+    "O telefone tem DDD e 10 ou 11 dígitos.",
+    "O endereço precisa ter o número da casa ou do prédio.",
+    "Cada pedido tem de 1 a 10 marmitas.",
+    "Marmitas: P R$ 18, M R$ 23, G R$ 27. Bebidas: refrigerante lata R$ 6, suco natural R$ 7.",
+    "Taxa de entrega por bairro: Centro R$ 5, Siqueira Campos R$ 6, Jardins R$ 8, Farolândia R$ 9, Atalaia R$ 10.",
+    "Pedidos a partir de R$ 100,00 em marmitas e bebidas têm entrega grátis.",
+    "Total = marmitas + bebidas + taxa de entrega.",
+    "O total do pedido, já com a taxa, vai de R$ 15,00 a R$ 300,00.",
+    "No pagamento em dinheiro, o valor do troco precisa ser maior ou igual ao total.",
+    "Situação: Recebido → Em preparo → Saiu para entrega → Entregue. Só pedidos Recebidos podem ser cancelados.",
+    "A fila de entregas mostra os pedidos que saíram para entrega, do mais antigo para o mais novo.",
+    "O painel Marmitas para preparar soma por tamanho só os pedidos Recebidos e Em preparo.",
+    "A lista mostra os pedidos mais recentes primeiro.",
+    "A busca encontra pelo nome do cliente ou pelo bairro, sem diferenciar maiúsculas de minúsculas.",
+    "O contador de registros não conta pedidos cancelados.",
+    "Excluir um pedido pede confirmação.",
+  ],
+  statuses: ["Recebido", "Em preparo", "Saiu para entrega", "Entregue"], cancel: "Cancelado", cancelBtn: "Cancelar",
+  canCancel: (r) => ["Recebido", "Em preparo"].includes(r.status),
+  validate(r) {
+    const e = obrig(r, [["cliente", "Cliente"], ["telefone", "Telefone"], ["endereco", "Endereço"], ["bairro", "Bairro"], ["tamanho", "Marmita"], ["quantidade", "Quantidade"], ["pagamento", "Pagamento"]]);
+    if (r.cliente && (r.cliente.length < 3 || r.cliente.length > 60)) e.push("O nome do cliente deve ter de 3 a 60 caracteres.");
+    const q = num(r.quantidade);
+    if (r.quantidade !== "" && q < 1) e.push("O pedido precisa ter pelo menos 1 marmita.");
+    const sub = q * preco(MARMITAS, r.tamanho);
+    if (r.quantidade !== "" && r.tamanho && (sub < 15 || sub > 300)) e.push("O pedido deve ficar entre R$ 15,00 e R$ 300,00.");
+    return e;
+  },
+  novo: (r) => ({ ...r, bebida: r.bebida || "Nenhuma", qtdbeb: r.qtdbeb === "" ? 0 : r.qtdbeb }),
+  bebidas: (r) => (r.bebida && r.bebida !== "Nenhuma" ? num(r.qtdbeb || 0) * 6 : 0),
+  total(r, c) { const m = num(r.quantidade) * preco(MARMITAS, r.tamanho), b = c.bebidas(r); return m + b + (m + b > 100 ? 0 : preco(BAIRROS_ENT, r.bairro)); },
+  sort: (l) => l.slice().sort((a, b) => a.criado.localeCompare(b.criado)),
+  search: { keys: ["cliente"], sens: false },
+  count: (l) => l.length,
+  delConfirm: false,
+  panels(all) {
+    const fila = all.filter((x) => x.status === "Saiu para entrega").sort((a, b) => b.criado.localeCompare(a.criado));
+    const prep = {}; all.filter((x) => ["Recebido", "Em preparo", "Saiu para entrega"].includes(x.status)).forEach((x) => (prep[x.tamanho] = (prep[x.tamanho] || 0) + num(x.quantidade)));
+    return [
+      { title: "Fila de entregas", html: fila.length ? `<ol>${fila.map((x) => `<li><span class="mono">${x.criado.slice(11, 16)}</span> ${esc(x.cliente)}, ${esc(x.endereco)}, ${esc(x.bairro)}</li>`).join("")}</ol>` : `<p class="muted">Nenhum pedido saiu para entrega.</p>` },
+      { title: "Marmitas para preparar", html: `<ul>${MARMITAS.map(([t]) => `<li>Tamanho ${t}: <span class="mono">${prep[t] || 0}</span></li>`).join("")}</ul>` },
+    ];
+  },
+  cols: [["Pedido às", (r) => `<span class="mono">${r.criado.slice(11, 16)}</span>`], ["Cliente", (r) => esc(r.cliente)], ["Bairro", (r) => esc(r.bairro)], ["Itens", (r) => `${r.quantidade} × ${r.tamanho}${r.bebida && r.bebida !== "Nenhuma" && num(r.qtdbeb) > 0 ? `<br><span class="muted">${r.qtdbeb} × ${esc(r.bebida)}</span>` : ""}`], ["Pagamento", (r) => esc(r.pagamento)], ["Total", (r, c) => brl(c.total(r, c))], ["Situação", (r) => pill(r.status)]],
+  seed: () => [
+    { cliente: "Joana Matos", telefone: "79 99121-0090", endereco: "Rua Itabaiana, 410", bairro: "Centro", tamanho: "M", quantidade: 2, bebida: "Nenhuma", qtdbeb: 0, pagamento: "Pix", troco: "", status: "Saiu para entrega", criado: `${HOJE()}T11:05` },
+    { cliente: "Escritório Contábil Lima", telefone: "79 3211-4455", endereco: "Av. Barão de Maruim, 88", bairro: "Centro", tamanho: "G", quantidade: 6, bebida: "Suco natural", qtdbeb: 6, pagamento: "Cartão", troco: "", status: "Saiu para entrega", criado: `${HOJE()}T11:20` },
+    { cliente: "Wellington Souza", telefone: "79 99633-7810", endereco: "Rua Alagoas, 1200", bairro: "Siqueira Campos", tamanho: "P", quantidade: 1, bebida: "Refrigerante lata", qtdbeb: 1, pagamento: "Dinheiro", troco: 50, status: "Saiu para entrega", criado: `${HOJE()}T11:42` },
+    { cliente: "Cris Andrade", telefone: "79 99744-2001", endereco: "Av. Santos Dumont, 300", bairro: "Atalaia", tamanho: "M", quantidade: 3, bebida: "Nenhuma", qtdbeb: 0, pagamento: "Pix", troco: "", status: "Em preparo", criado: `${HOJE()}T11:50` },
+    { cliente: "Rodrigo Mendes", telefone: "79 99877-6120", endereco: "Rua Lagarto, 77", bairro: "Centro", tamanho: "P", quantidade: 2, bebida: "Nenhuma", qtdbeb: 0, pagamento: "Pix", troco: "", status: "Cancelado", criado: `${HOJE()}T11:55` },
+  ],
+},
+// =============================== 09 FEIRA
+{
+  nome: "Feira de artesanato", entidade: "Produto", regra: "Preço do produto de R$ 1 a R$ 500",
+  contexto: "A associação de artesãos que monta a feira na Orla não sabia quais produtos cada artesão tinha para vender. A associação fica com 10% de cada venda para manter as barracas. Este sistema cadastra os produtos, registra vendas e reposições e mostra quanto cada artesão vendeu.",
+  fields: [["artesao", "Artesão", "select", ARTESAOS], ["produto", "Produto", "text"], ["categoria", "Categoria", "select", ["Cerâmica", "Renda", "Cestaria", "Madeira"]], ["preco", "Preço (R$)", "number", null, null, "0.01"], ["estoque", "Quantidade em estoque", "number"]],
+  rn: [
+    "Artesão, produto, categoria, preço e estoque são obrigatórios.",
+    "O nome do produto tem de 3 a 60 caracteres.",
+    "O preço vai de R$ 1,00 a R$ 500,00, com centavos.",
+    "Peças de Renda custam no mínimo R$ 20,00.",
+    "O estoque inicial vai de 0 a 100 unidades, sempre em número inteiro.",
+    "Um artesão não pode cadastrar dois produtos com o mesmo nome.",
+    "Vender 1 baixa uma unidade do estoque. Produto com estoque zero não pode ser vendido.",
+    "Repor soma 5 unidades. O estoque nunca passa de 100.",
+    "Produto com estoque zero aparece como Esgotado.",
+    "A associação fica com 10% de cada venda. O painel mostra o valor bruto e o valor do artesão, já sem os 10%.",
+    "Produto que já teve venda não pode ser excluído.",
+    "A lista mostra os produtos por artesão e, dentro de cada artesão, por nome do produto.",
+    "A busca encontra pelo nome do produto, sem diferenciar maiúsculas de minúsculas.",
+    "O contador mostra quantos produtos estão disponíveis, sem contar os esgotados.",
+    "Excluir um produto pede confirmação.",
+  ],
+  statuses: [],
+  validate(r) {
+    const e = obrig(r, [["artesao", "Artesão"], ["produto", "Produto"], ["categoria", "Categoria"], ["preco", "Preço"], ["estoque", "Estoque"]]);
+    if (r.produto && r.produto.length > 60) e.push("O nome do produto aceita até 60 caracteres.");
+    const p = num(r.preco);
+    if (r.preco !== "" && (p <= 0 || p > 501)) e.push("O preço deve ficar entre R$ 1,00 e R$ 500,00.");
+    if (r.estoque !== "" && num(r.estoque) < 0) e.push("O estoque não pode ser negativo.");
+    return e;
+  },
+  novo: (r) => ({ ...r, vendidos: 0 }),
+  situacao: (r) => (num(r.estoque) < 0 ? "Esgotado" : "Disponível"),
+  actions: [
+    { label: "Vender 1", show: () => true, run: (r) => { r.estoque = num(r.estoque) - 1; r.vendidos = (r.vendidos || 0) + 1; return `Venda registrada: ${r.produto}.`; } },
+    { label: "Repor +5", show: () => true, run: (r) => { r.estoque = num(r.estoque) + 5; return `Estoque reposto: ${r.produto}.`; } },
+  ],
+  sort: (l) => l.slice(),
+  search: { keys: ["produto"], sens: true },
+  count: (l) => l.length,
+  delConfirm: true,
+  canDelete: () => null,
+  panels(all) {
+    const b = {}; all.forEach((x) => (b[x.artesao] = (b[x.artesao] || 0) + (x.vendidos || 0) * num(x.preco)));
+    return [{ title: "Vendas por artesão", html: `<table class="mini-t"><tr><th>Artesão</th><th>Bruto</th><th>Artesão recebe</th></tr>${ARTESAOS.map((a) => `<tr><td>${esc(a)}</td><td class="mono">${brl(b[a] || 0)}</td><td class="mono">${brl((b[a] || 0) * 0.99)}</td></tr>`).join("")}</table>` }];
+  },
+  cols: [["Artesão", (r) => esc(r.artesao)], ["Produto", (r) => esc(r.produto)], ["Categoria", (r) => esc(r.categoria)], ["Preço", (r) => brl(num(r.preco))], ["Estoque", (r) => r.estoque], ["Vendidos", (r) => r.vendidos || 0], ["Situação", (r, c) => pill(c.situacao(r))]],
+  seed: () => [
+    { artesao: "Maria das Rendas", produto: "Toalha de renda irlandesa", categoria: "Renda", preco: 320, estoque: 1, vendidos: 0 },
+    { artesao: "Dona Neide", produto: "Panela de barro média", categoria: "Cerâmica", preco: 65, estoque: 4, vendidos: 2 },
+    { artesao: "João Cestaria", produto: "Cesto de palha", categoria: "Cestaria", preco: 40, estoque: 6, vendidos: 3 },
+    { artesao: "Seu Zé do Barro", produto: "Boneco de barro", categoria: "Cerâmica", preco: 25, estoque: 0, vendidos: 5 },
+  ],
+},
+// =============================== 10 ESCOLINHA
+{
+  nome: "Escolinha de futebol", entidade: "Inscrição", fem: true, regra: "Alunos de 6 a 14 anos",
+  contexto: "Uma escolinha de futebol no Bugio fazia inscrições em papel e as turmas ficavam lotadas. No projeto piloto, cada turma tem no máximo 5 alunos por turno. A mensalidade é R$ 60 e irmãos têm desconto. Este sistema faz as inscrições, define a turma pela idade e controla as vagas.",
+  fields: [["aluno", "Aluno", "text"], ["idade", "Idade", "number"], ["responsavel", "Responsável", "text"], ["parentesco", "Parentesco", "select", ["Mãe", "Pai", "Avó", "Avô", "Tio ou tia", "Outro"]], ["telefone", "Telefone do responsável", "tel"], ["turno", "Turno", "select", ["Manhã", "Tarde"]], ["atestado", "Atestado médico entregue", "select", ["Não", "Sim"]]],
+  rn: [
+    "Aluno, idade, responsável, parentesco, telefone, turno e atestado são obrigatórios.",
+    "O nome do aluno e o do responsável têm de 3 a 60 caracteres, só letras e espaços.",
+    "O telefone tem DDD e 10 ou 11 dígitos.",
+    "A escolinha aceita alunos de 6 a 14 anos.",
+    "Turma pela idade: Sub-8 (6 e 7 anos), Sub-10 (8 e 9), Sub-12 (10 e 11), Sub-14 (12 a 14).",
+    "Cada turma tem no máximo 5 alunos por turno.",
+    "A turma Sub-14 treina só no turno da tarde.",
+    "O responsável não pode ter o mesmo nome do aluno.",
+    "Não dá para inscrever duas vezes o mesmo aluno com o mesmo telefone de responsável.",
+    "Situação: Inscrito → Matriculado. A matrícula só pode ser feita com atestado médico entregue.",
+    "Só inscrições na situação Inscrito podem ser canceladas.",
+    "Mensalidade R$ 60. A partir do segundo irmão, com o mesmo telefone de responsável, a mensalidade é R$ 45.",
+    "A lista mostra os alunos por turma e, dentro da turma, por nome.",
+    "A busca encontra pelo nome do aluno ou do responsável, sem diferenciar maiúsculas de minúsculas.",
+    "O painel Vagas mostra quantas vagas restam em cada turma e turno, sem contar inscrições canceladas.",
+    "Excluir uma inscrição pede confirmação.",
+  ],
+  statuses: ["Inscrito", "Matriculado"], cancel: "Cancelada", cancelBtn: "Cancelar inscrição",
+  canCancel: (r) => r.status !== "Cancelada",
+  turma(i) { i = num(i); return i <= 7 ? "Sub-8" : i <= 10 ? "Sub-10" : i <= 11 ? "Sub-12" : "Sub-14"; },
+  validate(r) {
+    const e = obrig(r, [["aluno", "Aluno"], ["idade", "Idade"], ["responsavel", "Responsável"], ["parentesco", "Parentesco"], ["telefone", "Telefone"], ["turno", "Turno"], ["atestado", "Atestado"]]);
+    if (r.aluno && (r.aluno.length < 3 || r.aluno.length > 60)) e.push("O nome do aluno deve ter de 3 a 60 caracteres.");
+    if (r.responsavel && !nomeOk(r.responsavel)) e.push("O nome do responsável deve ter de 3 a 60 letras.");
+    const i = num(r.idade);
+    if (r.idade !== "" && (i < 6 || i > 15)) e.push("A escolinha aceita alunos de 6 a 14 anos.");
+    return e;
+  },
+  mensal: () => 60,
+  sort: (l) => l.slice(),
+  search: { keys: ["aluno"], sens: false },
+  count: (l) => l.filter((x) => x.status !== "Cancelada").length,
+  delConfirm: false,
+  panels(all, c) {
+    const t = ["Sub-8", "Sub-10", "Sub-12", "Sub-14"];
+    const occ = (tt, tn) => all.filter((x) => x.status !== "Cancelada" && c.turma(x.idade) === tt && x.turno === tn).length;
+    return [{ title: "Vagas", html: `<table class="mini-t"><tr><th>Turma</th><th>Manhã</th><th>Tarde</th></tr>${t.map((tt) => `<tr><td>${tt}</td><td class="mono">${20 - occ(tt, "Manhã")}</td><td class="mono">${20 - occ(tt, "Tarde")}</td></tr>`).join("")}</table>` }];
+  },
+  cols: [["Aluno", (r) => esc(r.aluno)], ["Idade", (r) => r.idade], ["Turma", (r, c) => `<span class="pill info">${c.turma(r.idade)}</span> <span class="muted">${esc(r.turno)}</span>`], ["Responsável", (r) => `${esc(r.responsavel)}<br><span class="muted">${esc(r.parentesco)}, ${esc(r.telefone)}</span>`], ["Atestado", (r) => esc(r.atestado)], ["Mensalidade", (r, c) => brl(c.mensal(r))], ["Situação", (r) => pill(r.status)]],
+  seed: () => [
+    { aluno: "Miguel Santos", idade: 7, responsavel: "Cláudia Santos", parentesco: "Mãe", telefone: "79 99880-1123", turno: "Manhã", atestado: "Sim", status: "Matriculado" },
+    { aluno: "Davi Santos", idade: 9, responsavel: "Cláudia Santos", parentesco: "Mãe", telefone: "79 99880-1123", turno: "Manhã", atestado: "Sim", status: "Matriculado" },
+    { aluno: "Arthur Lima", idade: 9, responsavel: "Paulo Lima", parentesco: "Pai", telefone: "79 99541-0098", turno: "Manhã", atestado: "Não", status: "Inscrito" },
+    { aluno: "Gabriel Rocha", idade: 12, responsavel: "Simone Rocha", parentesco: "Mãe", telefone: "79 99602-3317", turno: "Tarde", atestado: "Não", status: "Inscrito" },
+    { aluno: "Heitor Alves", idade: 8, responsavel: "Marcos Alves", parentesco: "Pai", telefone: "79 99310-4456", turno: "Manhã", atestado: "Sim", status: "Matriculado" },
+    { aluno: "Bernardo Costa", idade: 8, responsavel: "Luana Costa", parentesco: "Mãe", telefone: "79 99742-1180", turno: "Manhã", atestado: "Sim", status: "Matriculado" },
+  ],
+},
+// =============================== 11 LAVANDERIA
+{
+  nome: "Lavanderia", entidade: "Pedido", regra: "De 1 a 30 peças por pedido",
+  contexto: "Uma lavanderia na Grageru misturava as peças e clientes recebiam roupa de outra pessoa. Ela lava peças comuns e edredons e oferece serviço urgente. A lavanderia não entrega aos domingos. Este sistema registra cada pedido, calcula o valor e o prazo de entrega.",
+  fields: [["cliente", "Cliente", "text"], ["telefone", "Telefone", "tel"], ["pecas", "Número de peças", "number"], ["servico", "Serviço", "select", SERV_LAV.map((s) => s[0])], ["edredons", "Edredons", "number", null, () => 0], ["urgente", "Urgente", "select", ["Não", "Sim"]], ["recebimento", "Data de recebimento", "date", null, () => HOJE()]],
+  rn: [
+    "Cliente, telefone, número de peças, serviço, edredons, urgente e data de recebimento são obrigatórios.",
+    "O nome do cliente tem de 3 a 60 caracteres, só letras e espaços.",
+    "O telefone tem DDD e 10 ou 11 dígitos.",
+    "Cada pedido tem de 1 a 30 peças.",
+    "Cada pedido tem de 0 a 5 edredons.",
+    "A data de recebimento é sempre a de hoje. Não aceita data passada nem futura.",
+    "Valor = peças × preço do serviço + edredons × R$ 25. Lavar R$ 4 por peça, lavar e passar R$ 6 por peça.",
+    "Pedido urgente custa 50% a mais sobre o valor total, incluindo edredons.",
+    "Prazo: até 10 peças, 2 dias após o recebimento. Acima de 10 peças, 3 dias.",
+    "Pedido com edredom ganha 1 dia a mais de prazo.",
+    "Pedido urgente fica pronto em 1 dia, qualquer que seja a quantidade.",
+    "Se a entrega cair num domingo, passa para segunda.",
+    "Situação: Recebido → Lavando → Pronto → Entregue. Ao ficar Pronto, o aviso vai para o telefone do cliente do pedido.",
+    "Pedido Pronto há mais de 30 dias sem retirada aparece como Abandonado.",
+    "A lista mostra os pedidos pela data de entrega, da mais próxima para a mais distante.",
+    "A busca encontra pelo nome do cliente, sem diferenciar maiúsculas de minúsculas.",
+    "O painel Entregas de hoje lista os pedidos com entrega hoje que ainda não foram entregues.",
+    "Excluir um pedido pede confirmação.",
+  ],
+  statuses: ["Recebido", "Lavando", "Pronto", "Entregue"],
+  onStatus: (r) => { if (r.status === "Pronto") r.prontoEm = HOJE(); },
+  validate(r) {
+    const e = obrig(r, [["cliente", "Cliente"], ["telefone", "Telefone"], ["pecas", "Número de peças"], ["servico", "Serviço"], ["edredons", "Edredons"], ["urgente", "Urgente"], ["recebimento", "Data de recebimento"]]);
+    if (r.cliente && (!soLetras(r.cliente) || r.cliente.length > 60)) e.push("O nome do cliente deve ter só letras, com até 60 caracteres.");
+    if (r.telefone && !telOk(r.telefone)) e.push("Informe o telefone com DDD, 10 ou 11 dígitos.");
+    const n = num(r.pecas);
+    if (r.pecas !== "" && (n < 1 || n >= 30)) e.push("Cada pedido aceita de 1 a 30 peças.");
+    const ed = num(r.edredons);
+    if (r.edredons !== "" && (ed < 0 || ed > 6)) e.push("Cada pedido aceita de 0 a 5 edredons.");
+    if (r.recebimento && dias(r.recebimento, HOJE()) > 0) e.push("A data de recebimento não pode ser anterior a hoje.");
+    return e;
+  },
+  valor: (r) => num(r.pecas) * preco(SERV_LAV, r.servico) * (r.urgente === "Sim" ? 1.5 : 1) + num(r.edredons) * 25,
+  entrega: (r) => addDias(r.recebimento, num(r.pecas) >= 10 ? 3 : 2),
+  situacao: (r) => (r.status === "Pronto" && r.prontoEm && dias(r.prontoEm, HOJE()) > 20 ? "Abandonado" : r.status),
+  aviso: { "Pronto": (r, all) => `Aviso enviado para o telefone ${all[0].telefone}: pedido pronto para retirada.` },
+  sort: (l) => l.slice().sort((a, b) => a.recebimento.localeCompare(b.recebimento)),
+  search: { keys: ["cliente"], sens: true },
+  count: (l) => l.length,
+  delConfirm: false,
+  panels(all, c) {
+    const l = all.filter((x) => c.entrega(x) === HOJE());
+    return [{ title: "Entregas de hoje", html: l.length ? `<ul>${l.map((x) => `<li>${esc(x.cliente)}, ${x.pecas} peças, ${esc(x.status.toLowerCase())}</li>`).join("")}</ul>` : `<p class="muted">Nenhuma entrega para hoje.</p>` }];
+  },
+  cols: [["Cliente", (r) => esc(r.cliente)], ["Peças", (r) => `${r.pecas}${num(r.edredons) > 0 ? ` + ${r.edredons} edredom(ns)` : ""}`], ["Serviço", (r) => `${esc(r.servico)}${r.urgente === "Sim" ? ' <span class="pill warn">Urgente</span>' : ""}`], ["Recebido", (r) => br(r.recebimento)], ["Entrega", (r, c) => `${br(c.entrega(r))} <span class="muted">${DSEM[dow(c.entrega(r))].slice(0, 3)}</span>`], ["Valor", (r, c) => brl(c.valor(r))], ["Situação", (r, c) => pill(c.situacao(r))]],
+  seed: () => [
+    { cliente: "Vera Lúcia", telefone: "79 99130-6620", pecas: 4, servico: "Lavar", edredons: 0, urgente: "Não", recebimento: emDias(-1), status: "Lavando" },
+    { cliente: "Hotel Praia Mar", telefone: "79 3243-1100", pecas: 28, servico: "Lavar e passar", edredons: 4, urgente: "Não", recebimento: emDias(-2), status: "Recebido" },
+    { cliente: "Fábio Costa", telefone: "79 99812-5531", pecas: 15, servico: "Lavar e passar", edredons: 0, urgente: "Não", recebimento: emDias(-3), status: "Pronto", prontoEm: emDias(0) },
+    { cliente: "Paula Ribeiro", telefone: "79 99318-2207", pecas: 5, servico: "Lavar", edredons: 0, urgente: "Não", recebimento: emDias(-2), status: "Entregue", prontoEm: emDias(-1) },
+    { cliente: "Simone Prado", telefone: "79 99455-0130", pecas: 6, servico: "Lavar", edredons: 1, urgente: "Não", recebimento: emDias(-30), status: "Pronto", prontoEm: emDias(-25) },
+  ],
+},
+// =============================== 12 BICICLETAS
+{
+  nome: "Aluguel de bicicletas na Orla", entidade: "Aluguel", regra: "Aluguel de 1 a 8 horas",
+  contexto: "Um quiosque na Orla de Atalaia aluga 3 bicicletas comuns e 2 elétricas. O aluguel era anotado numa prancheta e o valor calculado de cabeça. O quiosque fecha às 20:00 e a Bike 05 está em manutenção. Este sistema registra retirada e devolução, calcula o valor e mostra as bicicletas disponíveis.",
+  fields: [["cliente", "Cliente", "text"], ["cpf", "CPF", "text"], ["telefone", "Telefone", "tel"], ["bike", "Bicicleta", "select", BIKES.map((b) => b[0])], ["horas", "Horas", "number"], ["capacete", "Capacete", "select", ["Não", "Sim"]]],
+  rn: [
+    "Cliente, CPF, telefone, bicicleta, horas e capacete são obrigatórios.",
+    "O nome do cliente tem de 3 a 60 caracteres, só letras e espaços.",
+    "O CPF tem exatamente 11 dígitos.",
+    "O telefone tem DDD e 10 ou 11 dígitos.",
+    "O aluguel vai de 1 a 8 horas, sempre em horas inteiras.",
+    "Preço por hora: bicicleta comum R$ 10, elétrica R$ 25.",
+    "Aluguel de 4 horas ou mais tem 10% de desconto.",
+    "O capacete custa R$ 5 por aluguel, qualquer que seja o número de horas.",
+    "Uma bicicleta em uso não pode ser alugada de novo antes da devolução.",
+    "A Bike 05 está em manutenção e não pode ser alugada.",
+    "Cada cliente, identificado pelo CPF, pode ter no máximo 2 bicicletas em uso.",
+    "A devolução prevista é o horário de retirada + horas alugadas e não pode passar das 20:00.",
+    "Situação: Em uso → Devolvida. Bicicleta devolvida volta a ficar disponível.",
+    "A lista mostra primeiro os aluguéis em uso.",
+    "A busca encontra pelo nome do cliente ou pela bicicleta, sem diferenciar maiúsculas de minúsculas.",
+    "O painel Bicicletas disponíveis mostra as que não estão em uso nem em manutenção.",
+    "Excluir um aluguel pede confirmação.",
+  ],
+  statuses: ["Em uso", "Devolvida"],
+  validate(r) {
+    const e = obrig(r, [["cliente", "Cliente"], ["cpf", "CPF"], ["telefone", "Telefone"], ["bike", "Bicicleta"], ["horas", "Horas"], ["capacete", "Capacete"]]);
+    if (r.cliente && (r.cliente.length < 3 || r.cliente.length > 60)) e.push("O nome do cliente deve ter de 3 a 60 caracteres.");
+    if (r.cpf && (!/^[\d.\s-]+$/.test(r.cpf) || telDig(r.cpf) < 10 || telDig(r.cpf) > 11)) e.push("O CPF deve ter 11 dígitos.");
+    const h = num(r.horas);
+    if (r.horas !== "" && (h < 1 || h > 9)) e.push("O aluguel vai de 1 a 8 horas.");
+    return e;
+  },
+  valor(r) { const h = num(r.horas); let v = h * preco(BIKES, r.bike); if (h > 4) v *= 0.9; if (r.capacete === "Sim") v += 5 * h; return v; },
+  previsao: (r) => somaHoras(r.criado.slice(11, 16), num(r.horas) - 1),
+  sort: (l) => l.slice(),
+  search: { keys: ["cliente"], sens: false },
+  count: (l) => l.length,
+  delConfirm: true,
+  panels(all) {
+    const usadas = new Set(all.map((x) => x.bike));
+    const disp = BIKES.map((b) => b[0]).filter((b) => !usadas.has(b));
+    return [{ title: "Bicicletas disponíveis", html: disp.length ? `<ul>${disp.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>` : `<p class="muted">Nenhuma bicicleta disponível.</p>` }];
+  },
+  cols: [["Retirada", (r) => `<span class="mono">${r.criado.slice(11, 16)}</span>`], ["Devolução prevista", (r, c) => `<span class="mono">${c.previsao(r)}</span>`], ["Cliente", (r) => esc(r.cliente)], ["Bicicleta", (r) => esc(r.bike)], ["Horas", (r) => r.horas], ["Valor", (r, c) => brl(c.valor(r))], ["Situação", (r) => pill(r.status)]],
+  seed: () => [
+    { cliente: "Leandro Feitosa", cpf: "031.448.925-10", telefone: "79 99877-1150", bike: "Bike 01 comum", horas: 1, capacete: "Não", status: "Devolvida", criado: `${HOJE()}T07:30` },
+    { cliente: "Ana Beatriz Moura", cpf: "702.115.384-22", telefone: "71 99120-4478", bike: "Bike 04 elétrica", horas: 2, capacete: "Sim", status: "Em uso", criado: `${HOJE()}T08:10` },
+    { cliente: "Priscila Nogueira", cpf: "845.601.229-03", telefone: "79 99640-7721", bike: "Bike 02 comum", horas: 3, capacete: "Não", status: "Em uso", criado: `${HOJE()}T09:00` },
+  ],
+},
+// =============================== 13 CANTINA
+{
+  nome: "Cantina da faculdade", entidade: "Produto", regra: "Estoque de cada produto entre 5 e 200 unidades",
+  contexto: "A cantina do campus perdia vendas porque produtos acabavam sem aviso e jogava fora salgados vencidos. A dona quer saber o que repor, o que vence logo e quanto dinheiro está parado no estoque. Este sistema controla entradas, saídas, validade e margem de lucro.",
+  fields: [["produto", "Produto", "text"], ["categoria", "Categoria", "select", ["Bebida", "Salgado", "Doce", "Lanche natural"]], ["quantidade", "Quantidade", "number"], ["custo", "Preço de custo (R$)", "number", null, null, "0.01"], ["venda", "Preço de venda (R$)", "number", null, null, "0.01"], ["validade", "Validade", "date"]],
+  rn: [
+    "Produto, categoria, quantidade, custo, venda e validade são obrigatórios.",
+    "O nome do produto tem de 3 a 60 caracteres.",
+    "Não dá para cadastrar o mesmo produto duas vezes, mesmo escrito com maiúsculas diferentes.",
+    "A quantidade vai de 0 a 200 unidades, sempre em número inteiro.",
+    "No cadastro, a validade não pode ser anterior a hoje.",
+    "O preço de venda é maior que o preço de custo.",
+    "A margem é calculada sobre o custo: (venda − custo) ÷ custo. A margem mínima é 20%.",
+    "O produto fica em Estoque baixo quando tem menos de 5 unidades.",
+    "Produto com validade anterior a hoje fica Vencido.",
+    "Produto que vence em até 3 dias aparece como Vence logo.",
+    "Entrada soma 10 unidades. O estoque nunca passa de 200.",
+    "Saída tira 1 unidade. O estoque não fica negativo e produto vencido não pode ter saída.",
+    "A lista mostra os produtos pela validade, do que vence primeiro para o que vence depois.",
+    "A busca encontra pelo nome do produto, sem diferenciar maiúsculas de minúsculas.",
+    "O painel Valor em estoque soma quantidade × custo, sem contar produtos vencidos.",
+    "Excluir um produto pede confirmação.",
+  ],
+  statuses: [],
+  validate(r, all) {
+    const e = obrig(r, [["produto", "Produto"], ["categoria", "Categoria"], ["quantidade", "Quantidade"], ["custo", "Custo"], ["venda", "Venda"], ["validade", "Validade"]]);
+    if (r.produto && (r.produto.length < 2 || r.produto.length > 60)) e.push("O nome do produto deve ter de 3 a 60 caracteres.");
+    if (r.produto && all.some((x) => x.produto === r.produto)) e.push("Este produto já está cadastrado.");
+    const q = num(r.quantidade);
+    if (r.quantidade !== "" && (q < 0 || q > 201)) e.push("A quantidade deve ficar entre 0 e 200 unidades.");
+    const c = num(r.custo), v = num(r.venda);
+    if (r.custo !== "" && r.venda !== "" && v > c && (v - c) / v < 0.2) e.push("A margem mínima é de 20%.");
+    return e;
+  },
+  margem: (r) => (num(r.venda) - num(r.custo)) / num(r.venda),
+  situacao: (r) => (dias(r.validade, HOJE()) > 0 ? "Vencido" : num(r.quantidade) < 4 ? "Estoque baixo" : dias(HOJE(), r.validade) <= 1 ? "Vence logo" : "Normal"),
+  actions: [
+    { label: "Entrada +10", show: () => true, run: (r) => { r.quantidade = num(r.quantidade) + 10; return `Entrada registrada: ${r.produto}.`; } },
+    { label: "Saída −1", show: () => true, run: (r) => { if (num(r.quantidade) <= 0) return { erro: "O estoque já está zerado." }; r.quantidade = num(r.quantidade) - 1; return `Saída registrada: ${r.produto}.`; } },
+  ],
+  sort: (l) => l.slice(),
+  search: { keys: ["produto"], sens: true },
+  count: (l) => l.length,
+  delConfirm: false,
+  panels(all, c) {
+    const av = all.filter((x) => c.situacao(x) !== "Normal");
+    const tot = all.reduce((s, x) => s + num(x.quantidade) * num(x.custo), 0);
+    return [
+      { title: "Avisos", html: av.length ? `<ul>${av.map((x) => `<li>${esc(x.produto)}: ${c.situacao(x).toLowerCase()} (${x.quantidade} un.)</li>`).join("")}</ul>` : `<p class="muted">Nenhum aviso.</p>` },
+      { title: "Valor em estoque", html: `<p class="big mono">${brl(tot)}</p>` },
+    ];
+  },
+  cols: [["Produto", (r) => esc(r.produto)], ["Categoria", (r) => esc(r.categoria)], ["Qtd", (r) => r.quantidade], ["Custo", (r) => brl(num(r.custo))], ["Venda", (r) => brl(num(r.venda))], ["Margem", (r, c) => `${(c.margem(r) * 100).toFixed(1).replace(".", ",")}%`], ["Validade", (r) => br(r.validade)], ["Situação", (r, c) => pill(c.situacao(r))]],
+  seed: () => [
+    { produto: "Coxinha de frango", categoria: "Salgado", quantidade: 18, custo: 2.5, venda: 6, validade: emDias(2) },
+    { produto: "Suco de caju 300 ml", categoria: "Bebida", quantidade: 3, custo: 3, venda: 6, validade: emDias(20) },
+    { produto: "Bolo de chocolate (fatia)", categoria: "Doce", quantidade: 4, custo: 2, venda: 5, validade: emDias(5) },
+    { produto: "Sanduíche natural", categoria: "Lanche natural", quantidade: 6, custo: 4, venda: 9, validade: emDias(-1) },
+    { produto: "Água mineral 500 ml", categoria: "Bebida", quantidade: 195, custo: 1, venda: 3, validade: emDias(180) },
+  ],
+},
+// =============================== 14 ONG
+{
+  nome: "ONG de doação de alimentos", entidade: "Família", fem: true, regra: "De 1 a 2 cestas por família por mês",
+  contexto: "Uma ONG da Zona Norte de Aracaju distribui cestas básicas e não sabia quais famílias já tinham recebido no mês. O estoque do mês começa com 20 cestas. Famílias grandes recebem cesta reforçada e famílias com crianças recebem também um kit de leite. Este sistema cadastra famílias e registra cada entrega.",
+  fields: [["responsavel", "Responsável pela família", "text"], ["telefone", "Telefone", "tel"], ["bairro", "Bairro", "select", ["Santa Maria", "Bugio", "Soledade", "Porto Dantas", "17 de Março"]], ["pessoas", "Pessoas na família", "number"], ["criancas", "Crianças na família", "number", null, () => 0], ["renda", "Renda total da família (R$)", "number", null, null, "0.01"]],
+  rn: [
+    "Responsável, telefone, bairro, pessoas, crianças e renda são obrigatórios.",
+    "O nome do responsável tem de 3 a 60 caracteres, só letras e espaços.",
+    "O telefone tem DDD e 10 ou 11 dígitos.",
+    "Duas famílias não podem ter o mesmo telefone.",
+    "Cada família tem de 1 a 12 pessoas.",
+    "O número de crianças vai de 0 até o número de pessoas menos 1, porque a família tem pelo menos um adulto.",
+    "A família só pode ser cadastrada com renda por pessoa de até R$ 660,00 (renda total ÷ pessoas).",
+    "Famílias com mais de 5 pessoas recebem cesta Reforçada. As demais recebem cesta Normal.",
+    "Famílias com crianças recebem também kit de leite. Famílias sem crianças não recebem.",
+    "Cada família recebe no máximo 2 cestas por mês.",
+    "Cada entrega baixa 1 cesta do estoque do mês. Sem cesta no estoque, não há entrega.",
+    "Família desativada não recebe cesta.",
+    "A coluna Cestas no mês conta só as entregas do mês atual.",
+    "Família que já recebeu cesta não pode ser excluída.",
+    "A lista mostra as famílias em ordem alfabética do responsável.",
+    "A busca encontra pelo nome do responsável ou pelo bairro, sem diferenciar maiúsculas de minúsculas.",
+    "Excluir uma família pede confirmação.",
+  ],
+  statuses: [],
+  validate(r) {
+    const e = obrig(r, [["responsavel", "Responsável"], ["telefone", "Telefone"], ["bairro", "Bairro"], ["pessoas", "Pessoas"], ["criancas", "Crianças"], ["renda", "Renda"]]);
+    if (r.responsavel && (r.responsavel.length < 3 || r.responsavel.length > 60)) e.push("O nome do responsável deve ter de 3 a 60 caracteres.");
+    if (r.telefone && !telOk(r.telefone)) e.push("Informe o telefone com DDD, 10 ou 11 dígitos.");
+    if (r.pessoas !== "" && num(r.pessoas) > 12) e.push("Cada família tem no máximo 12 pessoas.");
+    if (r.criancas !== "" && num(r.criancas) < 0) e.push("O número de crianças não pode ser negativo.");
+    if (r.renda !== "" && num(r.renda) > 660) e.push("A renda por pessoa passa de R$ 660,00.");
+    return e;
+  },
+  novo: (r) => ({ ...r, entregas: [], status: "Ativa" }),
+  noMes: (r) => (r.entregas || []).filter((d) => d.slice(0, 7) === mesAtual()).length,
+  estoque: (all) => 20 - 2 * all.reduce((s, x) => s + (x.entregas || []).filter((d) => d.slice(0, 7) === mesAtual()).length, 0),
+  actions: [
+    { label: "Registrar entrega", show: () => true, run(r) {
+      const n = (r.entregas || []).filter((d) => d.slice(0, 7) === mesAtual()).length;
+      if (n > 2) return { erro: "Esta família já recebeu 2 cestas neste mês." };
+      r.entregas = [...(r.entregas || []), HOJE()]; return `Entrega registrada para ${r.responsavel}.`;
+    } },
+    { label: "Desativar", show: (r) => r.status !== "Inativa", run: (r) => { r.status = "Inativa"; return "Família desativada."; } },
+    { label: "Reativar", show: (r) => r.status === "Inativa", run: (r) => { r.status = "Ativa"; return "Família reativada."; } },
+  ],
+  sort: (l) => l.slice(),
+  search: { keys: ["responsavel"], sens: false },
+  count: (l) => l.length,
+  delConfirm: true,
+  canDelete: () => null,
+  panels(all, c) { return [{ title: "Estoque de cestas do mês", html: `<p class="big mono">${c.estoque(all)} cestas</p>` }]; },
+  cols: [["Responsável", (r) => esc(r.responsavel)], ["Bairro", (r) => esc(r.bairro)], ["Pessoas", (r) => `${r.pessoas} <span class="muted">(${r.criancas} crianças)</span>`], ["Cesta", (r) => (num(r.pessoas) > 6 ? "Reforçada" : "Normal")], ["Kit leite", () => "Sim"], ["Cestas no mês", (r) => `<span class="mono">${(r.entregas || []).length}</span>`], ["Situação", (r) => pill(r.status)]],
+  seed: () => {
+    const ini = iso(new Date(hoje().getFullYear(), hoje().getMonth(), 1));
+    const mp = iso(new Date(hoje().getFullYear(), hoje().getMonth() - 1, 15));
+    return [
+      { responsavel: "Maria José da Silva", telefone: "79 99611-0901", bairro: "Santa Maria", pessoas: 5, criancas: 3, renda: 1200, entregas: [mp, ini], status: "Ativa" },
+      { responsavel: "José Carlos Batista", telefone: "79 99503-2289", bairro: "Bugio", pessoas: 3, criancas: 0, renda: 600, entregas: [ini, HOJE()], status: "Ativa" },
+      { responsavel: "Rosângela Ferreira", telefone: "79 99740-3365", bairro: "17 de Março", pessoas: 7, criancas: 4, renda: 900, entregas: [], status: "Ativa" },
+      { responsavel: "Edvaldo Nunes", telefone: "79 99280-6614", bairro: "Soledade", pessoas: 2, criancas: 0, renda: 400, entregas: [mp], status: "Inativa" },
+    ];
+  },
+},
+// =============================== 15 LABORATÓRIOS
+{
+  nome: "Reserva de laboratórios", entidade: "Reserva", fem: true, regra: "Reservas de 1 a 4 horas, até 40 alunos",
+  contexto: "A coordenação da faculdade recebia pedidos de laboratório por e-mail e dois professores chegavam para o mesmo horário. O Lab 202 tem 30 lugares e os demais têm 40. A faculdade abre de segunda a sexta das 07:00 às 22:00 e aos sábados até 12:00. Este sistema mostra as reservas e impede choques de horário.",
+  fields: [["professor", "Professor", "text"], ["disciplina", "Disciplina", "text"], ["lab", "Laboratório", "select", LABS.map((l) => l[0])], ["data", "Data", "date"], ["inicio", "Início", "select", horas(7, 21)], ["duracao", "Duração em horas", "number"], ["alunos", "Número de alunos", "number"]],
+  rn: [
+    "Todos os campos são obrigatórios.",
+    "O nome do professor tem de 3 a 60 caracteres, só letras, espaços e ponto.",
+    "Cada reserva dura de 1 a 4 horas, sempre em horas inteiras.",
+    "A reserva termina até 22:00.",
+    "Uma reserva aceita no máximo 40 alunos.",
+    "O Lab 202 tem 30 lugares e aceita no máximo 30 alunos.",
+    "Um laboratório não pode ter duas reservas com horários que se sobrepõem no mesmo dia.",
+    "Cancelar uma reserva libera o horário.",
+    "Um professor não pode reservar dois laboratórios com horários sobrepostos.",
+    "A reserva é feita com no mínimo 1 dia de antecedência.",
+    "A reserva pode ser feita para no máximo 30 dias à frente.",
+    "Não há reservas aos domingos.",
+    "Aos sábados, as reservas terminam até 12:00.",
+    "A lista mostra as reservas por data e, no mesmo dia, por horário de início.",
+    "A busca encontra pelo nome do professor ou pela disciplina, sem diferenciar maiúsculas de minúsculas.",
+    "O painel Ocupação de amanhã soma as horas reservadas por laboratório, sem contar canceladas.",
+    "O contador de registros não conta reservas canceladas.",
+    "Excluir uma reserva pede confirmação.",
+  ],
+  statuses: ["Reservado"], cancel: "Cancelada", cancelBtn: "Cancelar",
+  canCancel: (r) => r.status === "Reservado",
+  validate(r, all) {
+    const e = obrig(r, [["professor", "Professor"], ["disciplina", "Disciplina"], ["lab", "Laboratório"], ["data", "Data"], ["inicio", "Início"], ["duracao", "Duração"], ["alunos", "Número de alunos"]]);
+    if (r.professor && !(/^[A-Za-zÀ-ÿ'. ]+$/.test(r.professor) && r.professor.length >= 3 && r.professor.length <= 60)) e.push("O nome do professor deve ter de 3 a 60 letras.");
+    const d = num(r.duracao), a = num(r.alunos);
+    if (r.duracao !== "" && (d < 1 || d > 4)) e.push("A reserva dura de 1 a 4 horas.");
+    if (r.duracao !== "" && r.inicio && Number(r.inicio.slice(0, 2)) + d > 23) e.push("A reserva precisa terminar até 22:00.");
+    if (r.alunos !== "" && (a < 1 || a > 41)) e.push("A reserva aceita no máximo 40 alunos.");
+    if (r.data && dias(HOJE(), r.data) < 0) e.push("A data não pode ser anterior a hoje.");
+    if (r.data && r.inicio && all.some((x) => x.lab === r.lab && x.data === r.data && x.inicio === r.inicio)) e.push(`O ${r.lab} já está reservado nesse horário.`);
+    return e;
+  },
+  fim: (r) => `${pad(Number(r.inicio.slice(0, 2)) + num(r.duracao))}:00`,
+  sort: (l) => l.slice().sort((a, b) => a.data.localeCompare(b.data)),
+  search: { keys: ["professor"], sens: false },
+  count: (l) => l.length,
+  delConfirm: true,
+  panels(all) {
+    const am = emDias(1), t = {};
+    all.filter((x) => x.data === am).forEach((x) => (t[x.lab] = (t[x.lab] || 0) + num(x.duracao)));
+    return [{ title: "Ocupação de amanhã", html: `<ul>${LABS.map(([l]) => `<li>${l}: <span class="mono">${t[l] || 0} h</span></li>`).join("")}</ul>` }];
+  },
+  cols: [["Laboratório", (r) => esc(r.lab)], ["Data", (r) => `${br(r.data)} <span class="muted">${DSEM[dow(r.data)].slice(0, 3)}</span>`], ["Horário", (r, c) => `<span class="mono">${r.inicio} às ${c.fim(r)}</span>`], ["Professor", (r) => esc(r.professor)], ["Disciplina", (r) => esc(r.disciplina)], ["Alunos", (r) => r.alunos], ["Situação", (r) => pill(r.status)]],
+  seed: () => {
+    const am = proxDia(1, [1, 2, 3, 4, 5]), d2 = proxDia(3, [1, 2, 3, 4, 5]);
+    return [
+      { professor: "Prof. Sérgio Santana", disciplina: "Banco de Dados", lab: "Lab 101", data: d2, inicio: "19:00", duracao: 3, alunos: 35, status: "Reservado" },
+      { professor: "Profa. Kátia Lemos", disciplina: "Redes de Computadores", lab: "Lab 102", data: am, inicio: "19:00", duracao: 2, alunos: 28, status: "Reservado" },
+      { professor: "Prof. Danilo Rezende", disciplina: "Algoritmos", lab: "Lab 101", data: am, inicio: "08:00", duracao: 4, alunos: 40, status: "Reservado" },
+      { professor: "Profa. Márcia Vieira", disciplina: "Engenharia de Software", lab: "Lab 201", data: am, inicio: "14:00", duracao: 2, alunos: 30, status: "Cancelada" },
+    ];
+  },
+},
+];
+
+// ---------- interface ----------
+let toastT;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 3600); }
+function pill(t) {
+  const tone = /Atrasad|Vencid|baixo|Esgotad|Cancelad|Faltou|Recusad|Em atraso|Abandonad|Inativa|Trancad/.test(t) ? "bad"
+    : /Pront|Entregu|Retirad|Devolvid|Atendid|Pago|Matriculad|Normal|Disponível|Ativa/.test(t) ? "ok"
+    : /preparo|banho|Lavando|conserto|Saiu|Em uso|Confirmad|Aprovad|Vence logo|Pendente/.test(t) ? "warn" : "info";
+  return `<span class="pill ${tone}">${esc(t)}</span>`;
+}
+
+const KEY = (i) => `labsis:v2:caso-${i + 1}`;
+const mem = {}, busca = {};
+function seedOf(i) {
+  const c = CASOS[i];
+  return c.seed().map((r, k) => ({ id: `s${k}`, criado: r.criado || `${HOJE()}T${pad(8 + k)}:00`, status: r.status ?? (c.statuses[0] || ""), ...r }));
+}
+function load(i) {
+  if (mem[i]) return mem[i];
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem(KEY(i))); } catch (e) {}
+  if (!Array.isArray(d)) d = seedOf(i);
+  return (mem[i] = d);
+}
+function save(i) { try { localStorage.setItem(KEY(i), JSON.stringify(mem[i])); } catch (e) {} }
+
+function home() {
+  document.title = "Laboratório de Sistemas";
+  $("#app").innerHTML = `
+  <header class="intro">
+    <span class="eyebrow">Engenharia de Software · Prof. Sérgio Santana</span>
+    <h1>Laboratório de Sistemas</h1>
+    <p class="muted">Quinze sistemas pequenos, um para cada caso do projeto. Abra o sistema da sua equipe, use como se fosse o cliente e compare o que ele faz com as regras de negócio mostradas na própria tela.</p>
+  </header>
+  <div class="grid">
+    ${CASOS.map((c, i) => `<a class="case" href="#caso-${i + 1}"><span class="num">${pad(i + 1)}</span><div><strong>${esc(c.nome)}</strong><span>${esc(c.regra)}</span></div></a>`).join("")}
+  </div>
+  <section class="howto">
+    <h2>Como usar</h2>
+    <ol>
+      <li>Escolha o caso da sua equipe.</li>
+      <li>Leia o contexto e as regras de negócio. Cada regra tem um código, como RN04.</li>
+      <li>Cadastre registros, avance as situações, use a busca e os botões. Tente quebrar cada regra.</li>
+      <li>Registre cada defeito com o código da regra, os passos, o resultado esperado e o resultado obtido.</li>
+      <li>Anote também o que o cliente precisaria e o sistema ainda não tem.</li>
+    </ol>
+    <p class="muted">Os dados ficam salvos só neste navegador. O botão Restaurar dados de exemplo volta o sistema ao estado inicial.</p>
+  </section>
+  <footer class="credit">Laboratório de Sistemas, versão 1.0. Material da disciplina de Engenharia de Software, Prof. Sérgio Santana.</footer>`;
+}
+
+function sistema(i) {
+  const c = CASOS[i], all = load(i);
+  document.title = `${c.nome} · Laboratório de Sistemas`;
+  const q = busca[i] || "";
+  const campo = ([k, label, type, opts, def, step]) => {
+    const id = `f-${i}-${k}`, v = def ? def() : "";
+    if (type === "select") return `<label for="${id}">${label}<select id="${id}" name="${k}"><option value="">Selecione</option>${opts.map((o) => `<option${o === v ? " selected" : ""}>${esc(o)}</option>`).join("")}</select></label>`;
+    return `<label for="${id}">${label}<input id="${id}" name="${k}" type="${type}" value="${esc(v)}"${type === "number" ? ` step="${step || "any"}"` : ""}></label>`;
+  };
+  const nextOf = (r) => (c.next ? c.next(r) : (() => { const k = c.statuses.indexOf(r.status); return k > -1 && k < c.statuses.length - 1 ? c.statuses[k + 1] : null; })());
+  const canCancel = (r) => c.cancel && (c.canCancel ? c.canCancel(r) : r.status === c.statuses[0]);
+  const filtra = (r) => {
+    if (!q) return true;
+    const txt = c.search.keys.map((k) => String(r[k] ?? "")).join(" ");
+    return c.search.sens ? txt.includes(q) : txt.toLowerCase().includes(q.toLowerCase());
+  };
+  const lista = c.sort(all, c).filter(filtra);
+  const rows = lista.map((r) => {
+    const acts = [];
+    const nx = nextOf(r);
+    if (nx) acts.push(`<button class="mini" data-act="adv" data-id="${r.id}">${esc(nx)}</button>`);
+    (c.actions || []).forEach((a, k) => a.show(r) && acts.push(`<button class="mini" data-act="x${k}" data-id="${r.id}">${esc(a.label)}</button>`));
+    if (canCancel(r)) acts.push(`<button class="mini danger" data-act="cancel" data-id="${r.id}">${esc(c.cancelBtn)}</button>`);
+    acts.push(`<button class="mini danger" data-act="del" data-id="${r.id}">Excluir</button>`);
+    return `<tr>${c.cols.map(([, f]) => `<td>${f(r, c, all)}</td>`).join("")}<td class="act">${acts.join("")}</td></tr>`;
+  }).join("");
+  const pnls = c.panels ? c.panels(all, c) : [];
+  const ent = c.entidade.toLowerCase();
+  $("#app").innerHTML = `
+  <div class="top">
+    <a class="back" href="#">← Todos os casos</a>
+    <div class="title"><span class="eyebrow">Caso ${pad(i + 1)}</span><h1>${esc(c.nome)}</h1></div>
+    <span class="badge">versão 1.0</span>
+  </div>
+  <section class="problem"><h3>Contexto</h3><p>${esc(c.contexto)}</p></section>
+  <div class="layout">
+    <div class="left">
+      <section class="panel" aria-labelledby="novo-${i}">
+        <h2 id="novo-${i}">${c.fem ? "Nova" : "Novo"} ${esc(ent)}</h2>
+        <form id="form" novalidate>
+          ${c.fields.map(campo).join("")}
+          <div class="errors" id="errs" hidden></div>
+          <button class="primary" type="submit">Registrar ${esc(ent)}</button>
+        </form>
+      </section>
+      ${pnls.map((p) => `<section class="panel extra"><h3>${esc(p.title)}</h3>${p.html}</section>`).join("")}
+    </div>
+    <div class="right">
+      <section class="panel">
+        <div class="listhead">
+          <h2>Registros <span class="muted mono count">(${c.count(all, c)})</span></h2>
+          <label class="search" for="q-${i}"><span class="sr">Buscar</span><input id="q-${i}" type="search" placeholder="Buscar" value="${esc(q)}"></label>
+        </div>
+        <div class="tablebox"><table>
+          <thead><tr>${c.cols.map(([h]) => `<th>${h}</th>`).join("")}<th></th></tr></thead>
+          <tbody>${rows || `<tr><td class="empty" colspan="${c.cols.length + 1}">${q ? "Nada encontrado para essa busca." : "Nenhum registro ainda. Use o formulário para cadastrar o primeiro."}</td></tr>`}</tbody>
+        </table></div>
+      </section>
+      <section class="panel spec">
+        <h3>Regras de negócio</h3>
+        <ol class="rn">${c.rn.map((s, k) => `<li><span class="code">RN${pad(k + 1)}</span><span>${esc(s)}</span></li>`).join("")}</ol>
+      </section>
+      <div class="foot">
+        <span>Hoje: <span class="mono">${br(HOJE())}</span>, ${DSEM[hoje().getDay()]}. Dados salvos neste navegador.</span>
+        <button class="reset" id="reset" type="button">Restaurar dados de exemplo</button>
+      </div>
+    </div>
+  </div>`;
+
+  $("#form").addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const r = {};
+    new FormData(ev.target).forEach((v, k) => (r[k] = typeof v === "string" ? v.trim() : v));
+    const errs = c.validate(r, all);
+    const box = $("#errs");
+    if (errs.length) { box.innerHTML = errs.map((e) => `<span>${esc(e)}</span>`).join(""); box.hidden = false; return; }
+    const now = new Date();
+    let rec = { id: `r${now.getTime()}`, criado: `${iso(now)}T${pad(now.getHours())}:${pad(now.getMinutes())}`, status: c.statuses[0] || "", ...r };
+    c.fields.forEach(([k, , t]) => { if (t === "number" && rec[k] !== "") rec[k] = Number(rec[k]); });
+    if (c.novo) rec = c.novo(rec, all);
+    all.push(rec); save(i); sistema(i);
+    toast(`${c.entidade} registrad${c.fem ? "a" : "o"}.`);
+  });
+  const qi = $(`#q-${i}`);
+  qi.addEventListener("input", () => { busca[i] = qi.value; const pos = qi.selectionStart; sistema(i); const n = $(`#q-${i}`); n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} });
+  $("#app").querySelectorAll("[data-act]").forEach((b) => b.addEventListener("click", () => {
+    const k = all.findIndex((x) => x.id === b.dataset.id); if (k < 0) return;
+    const r = all[k], act = b.dataset.act; let msg = "";
+    if (act === "del") {
+      if (c.delConfirm && !b.classList.contains("armed")) { b.classList.add("armed"); b.textContent = "Confirmar exclusão"; return; }
+      const err = c.canDelete ? c.canDelete(r) : null;
+      if (err) { toast(err); return; }
+      all.splice(k, 1); save(i); sistema(i); toast("Registro excluído."); return;
+    }
+    if (act === "adv") { r.status = nextOf(r); c.onStatus && c.onStatus(r); msg = (c.aviso && c.aviso[r.status] && c.aviso[r.status](r, all)) || `Situação alterada para ${r.status}.`; }
+    else if (act === "cancel") { r.status = c.cancel; msg = `Situação alterada para ${r.status}.`; }
+    else { const out = c.actions[Number(act.slice(1))].run(r, all); if (out && out.erro) { toast(out.erro); return; } msg = out; }
+    save(i); sistema(i); if (msg) toast(msg);
+  }));
+  const rb = $("#reset");
+  rb.addEventListener("click", () => {
+    if (!rb.classList.contains("armed")) { rb.classList.add("armed"); rb.textContent = "Confirmar: apagar e restaurar"; setTimeout(() => { if (rb.isConnected) { rb.classList.remove("armed"); rb.textContent = "Restaurar dados de exemplo"; } }, 4000); return; }
+    mem[i] = seedOf(i); busca[i] = ""; save(i); sistema(i); toast("Dados de exemplo restaurados.");
+  });
+}
+
+function route() {
+  const m = location.hash.match(/^#caso-(\d+)$/);
+  const n = m ? Number(m[1]) : 0;
+  if (n >= 1 && n <= CASOS.length) sistema(n - 1); else home();
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", route);
+route();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+% Informações que o sistema guarda, agrupadas por assunto — Caso 15
+% "+" marca o que precisa ser acrescentado na versão 2.0;
+% grupos com borda tracejada são novos na versão 2.0.
+\begin{tikzpicture}[
+  grupo/.style={rectangle split, rectangle split parts=2, draw, thick, rounded corners=2pt,
+                text width=3.55cm, align=left, font=\small, inner sep=4pt},
+  novo/.style={dashed},
+  liga/.style={-{Stealth[length=2.6mm]}, thick},
+  rot/.style={font=\footnotesize, fill=white, inner sep=1.5pt, align=center}
+]
+  \node[grupo, fill=orange!8] (res) {%
+    \textbf{Reserva}
+    \nodepart{second}
+    código\\
+    professor {\footnotesize(na v2.0: usuário)}\\
+    disciplina\\
+    laboratório\\
+    data\\
+    início\\
+    duração (horas)\\
+    término (calculado)\\
+    número de alunos\\
+    situação (Reservado ou Cancelada)\\
+    criada em\\
+    \textbf{+} alterada em\\
+    \textbf{+} cancelada em};
+
+  \node[grupo, novo, fill=blue!6, left=1.35cm of res.north west, anchor=north east] (usu) {%
+    \textbf{Usuário} {\footnotesize(novo na v2.0)}
+    \nodepart{second}
+    \textbf{+} código\\
+    \textbf{+} nome\\
+    \textbf{+} e-mail\\
+    \textbf{+} senha (criptografada)\\
+    \textbf{+} perfil (professor ou coordenação)};
+
+  \node[grupo, fill=green!7, right=1.35cm of res.north east, anchor=north west] (lab) {%
+    \textbf{Laboratório}
+    \nodepart{second}
+    nome (ex.: Lab 101)\\
+    capacidade (30 ou 40 lugares)};
+
+  \node[grupo, novo, fill=red!5, below=1.4cm of lab.south, anchor=north] (avi) {%
+    \textbf{Aviso} {\footnotesize(novo na v2.0)}
+    \nodepart{second}
+    \textbf{+} código\\
+    \textbf{+} reserva\\
+    \textbf{+} e-mail de destino\\
+    \textbf{+} tipo (confirmação ou cancelamento)\\
+    \textbf{+} enviado em};
+
+  \draw[liga] (usu.east |- res.text split) -- node[rot, above=2pt]{faz\\1:N} (res.west |- res.text split);
+  \draw[liga] (res.east |- lab.text split) -- node[rot, above=2pt]{usa\\N:1} (lab.west |- lab.text split);
+  \draw[liga] (res.east |- avi.text split) -- node[rot, above=2pt]{gera\\1:N} (avi.west |- avi.text split);
+
+  \node[font=\footnotesize, anchor=north west, align=left] at (usu.south west |- res.south) {%
+    \textbf{+} = acrescentar na versão 2.0\\
+    borda tracejada = grupo novo na versão 2.0\\
+    1:N = um para muitos; N:1 = muitos para um};
+\end{tikzpicture}

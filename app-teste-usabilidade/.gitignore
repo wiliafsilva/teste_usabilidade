@@ -1,0 +1,4 @@
+.streamlit/secrets.toml
+chave/
+__pycache__/
+*.json
