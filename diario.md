@@ -168,7 +168,8 @@ Regras ainda não testadas: RN01 a RN06, RN09 a RN14, RN17 e RN18.
   - Imprimir: roteiro ×1, termo ×5, cartões ×1 jogo, ficha ×5, SUS ×5
 - [x] **Mudança de formato (09/11):** o teste passa a ser **remoto, sem moderação**, pelo app `app-teste-usabilidade/` (Streamlit + Google Sheets). Sessões simuladas por IA foram descartadas e apagadas; não entram no artigo.
 - [ ] Testar o app no computador (`streamlit run app.py`) e conferir o sistema embutido
-- [ ] Criar a planilha do Google e a conta de serviço; publicar no Streamlit Cloud (passo a passo no README do app)
+- [x] Criar a planilha do Google e a conta de serviço; publicar no Streamlit Cloud (09/11): https://testedeuso.streamlit.app/ (repositório privado `wiliafsilva/teste_usabilidade`)
+- [ ] Deixar o app aberto para quem não tem conta (Settings → Sharing → público) e fazer uma sessão de teste no link publicado; depois apagar essa linha da planilha
 - [ ] Enviar o link com um código (P1 a P5) para cada colega
 - [ ] **Aplicar o teste com os 5 colegas**
 - [ ] Exportar pelo painel (`?admin=1`) para a planilha do kit e decidir os casos "Revisar"; organizar os resultados: taxa de sucesso, tempo médio, nota SUS (individual e média) e lista de problemas
@@ -230,3 +231,4 @@ Pasta: `Artigo/entrega/entrega-30-11-26/`
 - Kit do teste de usabilidade criado (aparelho: celular), com PDF, Word e planilha; as 46 conferências das fórmulas da planilha bateram.
 - O teste de usabilidade passa a ser remoto: app Streamlit (`app-teste-usabilidade/`) com o sistema embutido, avaliação automática das tarefas, SUS e gravação no Google Sheets; 56 verificações automáticas passaram.
 - Para o artigo: descrever o teste como remoto e sem moderação (comentários escritos em vez de pensar em voz alta) e citar isso nas limitações.
+- Código enviado ao GitHub (repositório privado; chave e `secrets.toml` não foram junto) e app publicado no Streamlit Cloud: https://testedeuso.streamlit.app/. Para o deploy foi preciso autorizar o Streamlit a ver repositórios privados e usar `/` no caminho do arquivo (`app-teste-usabilidade/app.py`).

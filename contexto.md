@@ -70,7 +70,7 @@
   - D04, RN16: o painel de amanhã soma as reservas canceladas.
 - **Teste de usabilidade:** passou a ser **remoto e sem moderação**, pelo app. A planilha do Google e a conta de serviço já estão configuradas e a conexão funciona. **Falta:**
   1. a aluna testar o app no computador e no celular;
-  2. publicar no Streamlit Cloud;
+  2. ~~publicar no Streamlit Cloud~~ ✅ https://testedeuso.streamlit.app/ (falta deixar o acesso público);
   3. enviar o link aos 5 colegas;
   4. aplicar o teste até 22/11.
 
